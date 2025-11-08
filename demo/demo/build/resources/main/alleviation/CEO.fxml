@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="210.0" prefWidth="355.0" style="-fx-background-color: f1deff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CEOController">
+   <children>
+      <AnchorPane prefHeight="54.0" prefWidth="355.0" style="-fx-background-color: D3D3FF;">
+         <children>
+            <Label layoutX="131.0" layoutY="12.0" text="CEO Login">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="54.0" fitWidth="54.0">
+               <image>
+                  <Image url="@../Photos/MainPhoto.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <Label layoutX="29.0" layoutY="135.0" prefHeight="25.0" prefWidth="72.0" text="Username" />
+      <Label layoutX="52.0" layoutY="179.0" prefHeight="17.0" prefWidth="81.0" text="CEO Password" />
+      <Label layoutX="29.0" layoutY="65.0" prefHeight="17.0" prefWidth="72.0" text="First Name" />
+      <Label layoutX="29.0" layoutY="102.0" prefHeight="17.0" prefWidth="72.0" text="Last Name" />
+      <TextField layoutX="113.0" layoutY="62.0" prefHeight="25.0" prefWidth="149.0" />
+      <TextField layoutX="113.0" layoutY="98.0" prefHeight="17.0" prefWidth="149.0" />
+      <TextField layoutX="113.0" layoutY="135.0" prefHeight="25.0" prefWidth="149.0" />
+      <PasswordField layoutX="142.0" layoutY="175.0" />
+   </children>
+</AnchorPane>
