@@ -11,11 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import org.mindrot.jbcrypt.BCrypt; // Import BCrypt
 
 public class RegisterController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
 
     @FXML
     private TextField RegFirstnametextField;
@@ -31,12 +29,13 @@ public class RegisterController {
     private PasswordField RegConfirmPasswordField;
     @FXML
     private Label RegErrorLabel;
+
     @FXML
     public void GotoMainMenu(ActionEvent event) {
         try {
-            root = FXMLLoader.load(getClass().getResource("/FXML/Alleviation.fxml"));
-            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
+            Parent root = FXMLLoader.load(getClass().getResource("/FXML/Alleviation.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -55,49 +54,100 @@ public class RegisterController {
         if (!errors.isEmpty()) {
             RegErrorLabel.setText(errors.toString());
             RegErrorLabel.setStyle("-fx-text-fill: red;");
-        } else {
-            RegErrorLabel.setText("");
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/login.fxml"));
-                Parent root = loader.load();
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
+            return;
+        }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                RegErrorLabel.setText("Error loading next scene.");
-                RegErrorLabel.setStyle("-fx-text-fill: red;");
-            }
+        String firstname = RegFirstnametextField.getText();
+        String lastname = RegLastnameTextField.getText();
+        String email = RegEmailTextField.getText();
+        String username = RegUsernameTextField.getText();
+        String password = RegPasswordField.getText();
+
+        // 💡 CRITICAL CHANGE: Hash the password before storage
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+
+        Database.UserDatabase userDb;
+        try {
+            userDb = new Database.UserDatabase();
+        } catch (RuntimeException e) {
+            RegErrorLabel.setText("Database connection error. Check server status.");
+            RegErrorLabel.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        if (userDb.emailExists(email)) {
+            RegErrorLabel.setText("Email already exists!");
+            RegErrorLabel.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        if (userDb.usernameExists(username)) {
+            RegErrorLabel.setText("Username already taken!");
+            RegErrorLabel.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        // Pass the HASHED password to createUser
+        if (!userDb.createUser(firstname, lastname, email, username, hashedPassword)) {
+            RegErrorLabel.setText("Registration failed: Database write error. Check console for details!");
+            RegErrorLabel.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+
+        RegErrorLabel.setText("Registration successful!");
+        RegErrorLabel.setStyle("-fx-text-fill: green;");
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            RegErrorLabel.setText("Error loading next scene.");
+            RegErrorLabel.setStyle("-fx-text-fill: red;");
         }
     }
 
     private StringBuilder getStringBuilder() {
         StringBuilder errors = new StringBuilder();
-
-        if (RegFirstnametextField == null || RegFirstnametextField.getText().isEmpty()) {
+        String email = RegEmailTextField.getText();
+        String firstname = RegFirstnametextField.getText();
+        String lastname = RegLastnameTextField.getText();
+        String Username = RegUsernameTextField.getText();
+        String Password = RegPasswordField.getText();
+        String ConfirmPass = RegConfirmPasswordField.getText();
+        if (firstname == null || firstname.isEmpty()) {
             errors.append("First name is required.\n");
         }
-        if (RegLastnameTextField == null || RegLastnameTextField.getText().isEmpty()) {
+        if (lastname == null || lastname.isEmpty()) {
             errors.append("Last name is required.\n");
         }
-        if (RegEmailTextField == null || RegEmailTextField.getText().isEmpty()) {
+        if (email == null || email.isEmpty()) {
             errors.append("Email is required.\n");
+        } else if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            errors.append("Invalid email format.\n");
         }
-        if (RegUsernameTextField == null || RegUsernameTextField.getText().isEmpty()) {
+        if (Username == null || Username.isEmpty()) {
             errors.append("Username is required.\n");
         }
-        if (RegPasswordField == null || RegPasswordField.getText().isEmpty()) {
+        if (Password == null || Password.isEmpty()) {
             errors.append("Password is required.\n");
         }
-        if (RegConfirmPasswordField == null || RegConfirmPasswordField.getText().isEmpty()) {
+        if (ConfirmPass == null || ConfirmPass.isEmpty()) {
             errors.append("Confirm password is required.\n");
         }
-        if (RegPasswordField != null && RegConfirmPasswordField != null &&
-                !RegPasswordField.getText().equals(RegConfirmPasswordField.getText())) {
+        if (Password != null && ConfirmPass != null &&
+                !Password.equals(ConfirmPass)) {
             errors.append("Passwords do not match.\n");
         }
+
         return errors;
     }
+
 }
