@@ -1,0 +1,64 @@
+package model;
+
+
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
+
+/**
+* Simple Receipt wrapper for printing or displaying an Order summary.
+*/
+public class Receipt {
+private final Order order;
+private final String paymentMethod;
+private final String referenceNumber; // optional external reference
+
+
+public Receipt(Order order, String paymentMethod) {
+if (order == null) throw new IllegalArgumentException("Order cannot be null");
+this.order = order;
+this.paymentMethod = paymentMethod == null ? "Unknown" : paymentMethod;
+this.referenceNumber = String.format("R%s-%d", java.util.UUID.randomUUID().toString().substring(0,8), order.getId());
+}
+
+
+public Order getOrder() {
+return order;
+}
+
+
+public String getPaymentMethod() {
+return paymentMethod;
+}
+
+
+public String getReferenceNumber() {
+return referenceNumber;
+}
+
+
+public String toPrintableText() {
+StringBuilder sb = new StringBuilder();
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss");
+sb.append("===== RECEIPT =====\n");
+sb.append("Ref: ").append(getReferenceNumber()).append('\n');
+sb.append("Order #: ").append(order.getId()).append("\n");
+sb.append("Customer: ").append(order.getCustomerUsername()).append('\n');
+sb.append("Date: ").append(order.getOrderDateTime().format(dtf)).append('\n');
+sb.append("--------------------\n");
+for (OrderLine line : order.getLines()) {
+sb.append(String.format(Locale.US, "%s x%d %.2f\n", line.getItemName(), line.getQuantity(), line.getLineTotal()));
+}
+sb.append("--------------------\n");
+sb.append(String.format(Locale.US, "TOTAL: %.2f\n", order.getTotalAmount()));
+sb.append("Payment: ").append(getPaymentMethod()).append('\n');
+sb.append("====================\n");
+return sb.toString();
+}
+
+
+@Override
+public String toString() {
+return toPrintableText();
+}
+}
