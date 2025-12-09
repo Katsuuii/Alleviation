@@ -35,7 +35,7 @@ Objects.equals(itemName, orderLine.itemName);
 
 @Override
 public int hashCode() {
-return Objects.hash(itemId, itemName, quantity, unitPrice);
+return Objects.hash(id, productName, quantity, unitPrice);
 }
 
 
