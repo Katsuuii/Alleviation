@@ -1,0 +1,59 @@
+package controller;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import model.OrderLine;
+
+public class OrderLineController {
+
+    @FXML
+    private TextField idField;
+
+    @FXML
+    private TextField productNameField;
+
+    @FXML
+    private TextField quantityField;
+
+    @FXML
+    private TextField priceField;
+
+    @FXML
+    private Label totalLabel;
+
+    private OrderLine orderLine;
+
+    @FXML
+    public void initialize() {
+        totalLabel.setText("");
+    }
+
+    @FXML
+    private void calculateTotal() {
+        try {
+            int quantity = Integer.parseInt(quantityField.getText());
+            double price = Double.parseDouble(priceField.getText());
+            if (quantity < 0 || price < 0) throw new IllegalArgumentException();
+
+            totalLabel.setText(String.format("%.2f", quantity * price));
+        } catch (Exception e) {
+            totalLabel.setText("Invalid input");
+        }
+    }
+
+    public OrderLine getOrderLine() {
+        try {
+            int quantity = Integer.parseInt(quantityField.getText());
+            double price = Double.parseDouble(priceField.getText());
+            return new OrderLine(
+                    idField.getText(),
+                    productNameField.getText(),
+                    quantity,
+                    price
+            );
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
