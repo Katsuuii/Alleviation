@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: f1deff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GiftCardsController">
+   <children>
+      <AnchorPane prefHeight="62.0" prefWidth="213.0" style="-fx-background-color: D3D3FF;">
+         <children>
+            <Label layoutX="107.0" layoutY="18.0" text="Gift Cards:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="68.0" fitWidth="73.0" layoutY="-2.0">
+               <image>
+                  <Image url="/../Resources/Pictures/MainPhoto.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <Button layoutX="14.0" layoutY="359.0" mnemonicParsing="false" onAction="#GobackUser" prefHeight="27.0" prefWidth="67.0" style="-fx-background-color: c7cbff;" text="Go back" />
+      <Button fx:id="LogoutButton" layoutX="519.0" layoutY="14.0" mnemonicParsing="false" onAction="#Loggingout" prefHeight="27.0" prefWidth="67.0" style="-fx-background-color: c7cbff;" text="Logout" />
+      <ImageView fitHeight="165.0" fitWidth="142.0" layoutX="20.0" layoutY="72.0">
+         <image>
+            <Image url="/../Resources/Pictures/GiftCard_Roblox.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="165.0" fitWidth="151.0" layoutX="143.0" layoutY="72.0">
+         <image>
+            <Image url="@/../Resources/Pictures/Minecraft.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="171.0" fitWidth="151.0" layoutX="263.0" layoutY="66.0">
+         <image>
+            <Image url="/../Resources/Pictures/Steam.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="171.0" fitWidth="111.0" layoutX="414.0" layoutY="62.0">
+         <image>
+            <Image url="/../Resources/Pictures/Visa.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="58.0" layoutY="248.0" mnemonicParsing="false" onAction="#GobackUser" prefHeight="27.0" prefWidth="67.0" style="-fx-background-color: c7cbff;" text="Purchase" />
+      <Button layoutX="180.0" layoutY="248.0" mnemonicParsing="false" onAction="#GobackUser" prefHeight="27.0" prefWidth="67.0" style="-fx-background-color: c7cbff;" text="Purchase" />
+      <Button layoutX="305.0" layoutY="248.0" mnemonicParsing="false" onAction="#GobackUser" prefHeight="27.0" prefWidth="67.0" style="-fx-background-color: c7cbff;" text="Purchase" />
+      <Button layoutX="436.0" layoutY="248.0" mnemonicParsing="false" onAction="#GobackUser" prefHeight="27.0" prefWidth="67.0" style="-fx-background-color: c7cbff;" text="Purchase" />
+   </children>
+</AnchorPane>
