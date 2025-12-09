@@ -1,0 +1,39 @@
+package model;
+
+
+public double getTotalAmount() {
+return lines.stream().mapToDouble(OrderLine::getLineTotal).sum();
+}
+
+
+public int getTotalItems() {
+return lines.stream().mapToInt(OrderLine::getQuantity).sum();
+}
+
+
+public void clear() {
+lines.clear();
+}
+
+
+@Override
+public boolean equals(Object o) {
+if (this == o) return true;
+if (o == null || getClass() != o.getClass()) return false;
+Order order = (Order) o;
+return id == order.id;
+}
+
+
+@Override
+public int hashCode() {
+return Objects.hash(id);
+}
+
+
+@Override
+public String toString() {
+return String.format("Order #%d by %s (%s) - items: %d - total: %.2f",
+id, customerUsername, orderDateTime, getTotalItems(), getTotalAmount());
+}
+}
