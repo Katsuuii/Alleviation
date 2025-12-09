@@ -1,0 +1,46 @@
+package model;
+public void setQuantity(int quantity) {
+if (quantity < 0) throw new IllegalArgumentException("Quantity cannot be negative");
+this.quantity = quantity;
+}
+
+
+public double getUnitPrice() {
+return unitPrice;
+}
+
+
+public void setUnitPrice(double unitPrice) {
+if (unitPrice < 0) throw new IllegalArgumentException("Unit price cannot be negative");
+this.unitPrice = unitPrice;
+}
+
+
+public double getLineTotal() {
+return unitPrice * quantity;
+}
+
+
+@Override
+public boolean equals(Object o) {
+if (this == o) return true;
+if (o == null || getClass() != o.getClass()) return false;
+OrderLine orderLine = (OrderLine) o;
+return quantity == orderLine.quantity &&
+Double.compare(orderLine.unitPrice, unitPrice) == 0 &&
+Objects.equals(itemId, orderLine.itemId) &&
+Objects.equals(itemName, orderLine.itemName);
+}
+
+
+@Override
+public int hashCode() {
+return Objects.hash(itemId, itemName, quantity, unitPrice);
+}
+
+
+@Override
+public String toString() {
+return String.format("%s x%d @ %.2f = %.2f", itemName, quantity, unitPrice, getLineTotal());
+}
+}
