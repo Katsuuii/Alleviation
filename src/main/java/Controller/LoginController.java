@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import java.io.IOException;
+import Database.UserDatabase; // Import the UserDatabase class
 
 public class LoginController {
     private Stage stage;
@@ -67,8 +68,31 @@ public class LoginController {
         if (!errors.isEmpty()) {
             LogErrorLabel.setText(errors.toString());
             LogErrorLabel.setStyle("-fx-text-fill: red;");
-        } else {
-            LogErrorLabel.setText("");
+            return;
+        }
+
+        String username = Userlogfield.getText();
+        String password = UserPassField.getText();
+
+        UserDatabase userDb;
+        try {
+            userDb = new UserDatabase();
+        } catch (RuntimeException e) {
+            // Handle fatal connection failure
+            LogErrorLabel.setText("Database connection error. Try again later.");
+            LogErrorLabel.setStyle("-fx-text-fill: red;");
+            return;
+        }
+
+        // 💡 CRITICAL IMPLEMENTATION: Attempt secure authentication
+        org.bson.Document authenticatedUser = userDb.authenticateUser(username, password);
+
+        if (authenticatedUser != null) {
+            // Authentication SUCCESS!
+            LogErrorLabel.setText("Login Successful!");
+            LogErrorLabel.setStyle("-fx-text-fill: green;");
+
+            // Proceed to the next scene (UserInterface.fxml)
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/UserInterface.fxml"));
                 Parent root = loader.load();
@@ -81,6 +105,10 @@ public class LoginController {
                 LogErrorLabel.setText("Error loading next scene.");
                 LogErrorLabel.setStyle("-fx-text-fill: red;");
             }
+        } else {
+            // Authentication FAILURE!
+            LogErrorLabel.setText("Invalid Username or Password.");
+            LogErrorLabel.setStyle("-fx-text-fill: red;");
         }
     }
 
