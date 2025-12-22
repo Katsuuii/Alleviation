@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controller.CEOInterface"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="229.0" prefWidth="437.0" style="-fx-background-color: #f1deff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CEOInterface">
+    <children>
+        <AnchorPane prefHeight="54.0" prefWidth="437.0" style="-fx-background-color: D3D3FF;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <ImageView fitHeight="54.0" fitWidth="54.0" AnchorPane.leftAnchor="0.0">
+                    <image>
+                        <Image url="@../Pictures/MainPhoto.png" />
+                    </image>
+                </ImageView>
 
+                <Label fx:id="CEOLabelWelcome" alignment="CENTER" layoutY="12.0" prefHeight="30.0" text="Welcome!" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="70.0">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Label>
+
+                <Button fx:id="CEOButton" layoutY="14.0" mnemonicParsing="false" onAction="#Loggingout" prefHeight="25.0" prefWidth="60.0" style="-fx-background-color: #c7cbff;" text="Leave" AnchorPane.rightAnchor="10.0" />
+            </children>
+        </AnchorPane>
+      <Button fx:id="CEOButton1" layoutX="158.0" layoutY="90.0" mnemonicParsing="false" onAction="#ToChecker" prefHeight="25.0" prefWidth="121.0" style="-fx-background-color: #c7cbff;" text="Product Checker" />
+      <Button fx:id="CEOButton11" layoutX="158.0" layoutY="155.0" mnemonicParsing="false" onAction="#ToImplement" prefHeight="25.0" prefWidth="121.0" style="-fx-background-color: #c7cbff;" text="Implement Product" />
+    </children>
 </AnchorPane>
