@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="364.0" style="-fx-background-color: #f1deff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AlleviationController">
+<AnchorPane prefHeight="400.0" prefWidth="364.0" style="-fx-background-color: #f1deff;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AlleviationController"
+>
     <children>
         <Label layoutX="106.0" layoutY="114.0" text="Would you like to?">
             <font>
@@ -48,5 +49,6 @@
             </ImageView>
          </children>
       </AnchorPane>
+      <Button fx:id="CEOButton" layoutX="156.0" layoutY="374.0" mnemonicParsing="false" onAction="#ToCEO" prefHeight="13.0" prefWidth="60.0" style="-fx-background-color: #c7cbff;" text="ToCEO" />
     </children>
 </AnchorPane>
