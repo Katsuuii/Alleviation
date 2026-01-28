@@ -4,3 +4,6 @@ Throughout its development, the project has evolved through multiple iterations,
 
 Made By: Katsuu and FairyLighted 
 
+<p align="center">
+  <img src="Media/kenjaku-takaba.gif" width="600"/>
+</p>
