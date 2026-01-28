@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import java.net.URL?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: linear-gradient(to bottom, #F7EFFF, #EDE7FF);"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.GiftCardsController">
+
+   <stylesheets>
+      <URL value="@/CSS/alleviation.css"/>
+   </stylesheets>
+
+   <children>
+
+      <!-- ===== HEADER ===== -->
+      <AnchorPane prefHeight="78.0" prefWidth="600.0"
+                  style="-fx-background-color: #D9D3FF;
+                           -fx-border-color: rgba(0,0,0,0.08);
+                           -fx-border-width: 0 0 1 0;">
+         <children>
+            <HBox layoutX="14.0" layoutY="10.0" spacing="12.0"
+                  prefWidth="572.0" prefHeight="58.0"
+                  alignment="CENTER_LEFT">
+
+               <children>
+                  <ImageView fitHeight="58.0" fitWidth="58.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../Pictures/MainPhoto.png" />
+                     </image>
+                  </ImageView>
+
+                  <Label text="Gift Cards Store"
+                         style="-fx-text-fill: #2D2353; -fx-font-weight: 800;">
+                     <font>
+                        <Font size="22.0"/>
+                     </font>
+                  </Label>
+
+                  <Region HBox.hgrow="ALWAYS"/>
+
+                  <Button fx:id="LogoutButton"
+                          text="Log out"
+                          mnemonicParsing="false"
+                          onAction="#Loggingout"
+                          prefWidth="90.0"
+                          prefHeight="30.0"
+                          styleClass="mini-btn"/>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+
+      <!-- ===== GIFT CARD CARDS ===== -->
+      <HBox layoutX="35.0" layoutY="105.0" spacing="18.0"
+            alignment="TOP_CENTER" prefWidth="530.0">
+
+         <!-- Roblox -->
+         <VBox spacing="10.0" alignment="TOP_CENTER"
+               prefWidth="130.0"
+               style="-fx-background-color: rgba(255,255,255,0.78);
+                         -fx-background-radius: 18;
+                         -fx-padding: 12;">
+            <children>
+               <ImageView fitHeight="120.0" fitWidth="110.0" preserveRatio="true">
+                  <image>
+                     <Image url="@../Pictures/GiftCard_Roblox.png" />
+                  </image>
+               </ImageView>
+
+               <Label text="Roblox">
+                  <font><Font size="14.0"/></font>
+               </Label>
+
+               <Label text="\$10-$50">
+                  <font><Font size="12.0"/></font>
+               </Label>
+
+               <Button text="Purchase"
+                       mnemonicParsing="false"
+                       onAction="#handlePurchaseRoblox"
+                       prefWidth="110.0"
+                       prefHeight="32.0"
+                       styleClass="primary-btn"/>
+            </children>
+         </VBox>
+
+         <!-- Minecraft -->
+         <VBox spacing="10.0" alignment="TOP_CENTER"
+               prefWidth="130.0"
+               style="-fx-background-color: rgba(255,255,255,0.78);
+                         -fx-background-radius: 18;
+                         -fx-padding: 12;">
+            <children>
+               <ImageView fitHeight="120.0" fitWidth="110.0" preserveRatio="true">
+                  <image>
+                     <Image url="@../Pictures/Minecraft.png" />
+                  </image>
+               </ImageView>
+
+               <Label text="Minecraft">
+                  <font><Font size="14.0"/></font>
+               </Label>
+
+               <Label text="\$30">
+                  <font><Font size="12.0"/></font>
+               </Label>
+
+               <Button text="Purchase"
+                       mnemonicParsing="false"
+                       onAction="#handlePurchaseMinecraft"
+                       prefWidth="110.0"
+                       prefHeight="32.0"
+                       styleClass="primary-btn"/>
+            </children>
+         </VBox>
+
+         <!-- Steam -->
+         <VBox spacing="10.0" alignment="TOP_CENTER"
+               prefWidth="130.0"
+               style="-fx-background-color: rgba(255,255,255,0.78);
+                         -fx-background-radius: 18;
+                         -fx-padding: 12;">
+            <children>
+               <ImageView fitHeight="120.0" fitWidth="110.0" preserveRatio="true">
+                  <image>
+                     <Image url="@../Pictures/Steam.png" />
+                  </image>
+               </ImageView>
+
+               <Label text="Steam">
+                  <font><Font size="14.0"/></font>
+               </Label>
+
+               <Label text="\$5-$20">
+                  <font><Font size="12.0"/></font>
+               </Label>
+
+               <Button text="Purchase"
+                       mnemonicParsing="false"
+                       onAction="#handlePurchaseSteam"
+                       prefWidth="110.0"
+                       prefHeight="32.0"
+                       styleClass="primary-btn"/>
+            </children>
+         </VBox>
+
+         <!-- Visa -->
+         <VBox spacing="10.0" alignment="TOP_CENTER"
+               prefWidth="130.0"
+               style="-fx-background-color: rgba(255,255,255,0.78);
+                         -fx-background-radius: 18;
+                         -fx-padding: 12;">
+            <children>
+               <ImageView fitHeight="120.0" fitWidth="110.0" preserveRatio="true">
+                  <image>
+                     <Image url="@../Pictures/Visa.png" />
+                  </image>
+               </ImageView>
+
+               <Label text="Visa">
+                  <font><Font size="14.0"/></font>
+               </Label>
+
+               <Label text="\$5-$50">
+                  <font><Font size="12.0"/></font>
+               </Label>
+
+               <Button text="Purchase"
+                       mnemonicParsing="false"
+                       onAction="#handlePurchaseVisa"
+                       prefWidth="110.0"
+                       prefHeight="32.0"
+                       styleClass="primary-btn"/>
+            </children>
+         </VBox>
+
+      </HBox>
+
+      <!-- Back -->
+      <Button layoutX="20.0" layoutY="360.0"
+              text="Go back"
+              mnemonicParsing="false"
+              onAction="#GobackUser"
+              prefWidth="90.0"
+              prefHeight="30.0"
+              styleClass="mini-btn"/>
+
+   </children>
+</AnchorPane>
