@@ -34,6 +34,7 @@ public class AlleviationController {
         stage.setScene(scene);
         stage.show();
     }
+    // Main Menu Registration
     @FXML
     public void MainMenuReg(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("/FXML/Register.fxml"));
