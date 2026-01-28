@@ -25,7 +25,7 @@ public class AlleviationController {
         stage.setScene(scene);
         stage.show();
     }
-
+    // To CEO Code
     @FXML
     public void ToCEO(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("/FXML/CEO.fxml"));
