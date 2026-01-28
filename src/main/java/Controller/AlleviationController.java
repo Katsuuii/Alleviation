@@ -16,7 +16,7 @@ public class AlleviationController {
     private Stage stage;
     private Scene scene;
     private Parent root;
-
+    // To Login
     @FXML
     public void MainMenuLog(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("/FXML/login.fxml"));
