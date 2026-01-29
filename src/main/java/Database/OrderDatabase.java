@@ -25,8 +25,9 @@ public class OrderDatabase {
                     .append("productId", line.getProductId())
                     .append("quantity", line.getQuantity())
                     .append("priceAtOrder", line.getPriceAtOrder())
-                    .append("subtotal", line.getQuantity() * line.getPriceAtOrder())
-                    .append("notes", notes); // Notes from TextArea
+                    .append("giftAmount", line.getGiftAmount())
+                    .append("subtotal", line.getQuantity() * line.getPriceAtOrder());
+
             orderLineDocs.add(lineDoc);
         }
 
