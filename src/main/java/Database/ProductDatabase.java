@@ -18,6 +18,12 @@ public class ProductDatabase {
         if (doc == null) return null;
         return doc.getString("_id");
     }
+    public String getProductNameById(String productId) {
+        Document doc = productCollection.find(eq("_id", productId)).first();
+        if (doc == null) return null;
+        return doc.getString("name");
+    }
+
     public double getPriceByProductId(String productId) {
         Document doc = productCollection.find(eq("_id", productId)).first();
         if (doc == null) throw new IllegalArgumentException("Product not found: " + productId);
