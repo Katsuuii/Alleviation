@@ -41,12 +41,6 @@ public class OrderDatabase {
                 .append("notes", notes)
                 .append("orderLines", orderLineDocs);
 
-        try {
-            orderCollection.insertOne(orderDoc);
-            System.out.println("Order inserted successfully: " + orderDoc.toJson());
-        } catch (Exception e) {
-            System.err.println("Failed to insert order: " + e.getMessage());
-            e.printStackTrace();
-        }
+        orderCollection.insertOne(orderDoc);
     }
 }
