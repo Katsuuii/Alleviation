@@ -57,7 +57,8 @@ public class ProductCheckController {
         colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colSales.setCellValueFactory(new PropertyValueFactory<>("sales"));
 
-        productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+
 
         colQty.setCellFactory(col -> new TableCell<>() {
             @Override
