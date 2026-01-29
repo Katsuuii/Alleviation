@@ -127,7 +127,7 @@ public class OrderController implements Initializable {
         int min, max, step;
 
         switch (cardName) {
-            case ROBLOX -> { min = 5; max = 50; step = 5; }
+            case ROBLOX -> { min = 10; max = 50; step = 5; }  // updated to match your UI
             case STEAM  -> { min = 5;  max = 20; step = 5; }
             case VISA   -> { min = 5;  max = 50; step = 5; }
             case MINECRAFT -> { min = 30; max = 30; step = 1; } // fixed value
