@@ -181,7 +181,14 @@ public class OrderController implements Initializable {
             OrderDatabase orderDb = new OrderDatabase(getMongoCollection());
             orderDb.addOrder(order, notes);
 
+            // If gift cards should NOT reduce stock, wrap this in if (!isGiftCard)
+            if (!isGiftCard) {
+                productDb.recordSale(productId, quantity);
+            }
+            System.out.println("recordSale() called for productId=" + productId + " qty=" + quantity);
+            System.out.println("Stock BEFORE=" + productDb.getStock(productId));
             productDb.recordSale(productId, quantity);
+            System.out.println("Stock AFTER=" + productDb.getStock(productId));
 
             showAlert(Alert.AlertType.INFORMATION, "Order Submitted!", "Your order has been saved.");
 
