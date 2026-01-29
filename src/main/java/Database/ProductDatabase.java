@@ -53,8 +53,21 @@ public class ProductDatabase {
                 Updates.inc("sales", amount)
         );
 
-        productCollection.updateOne(query, updates);
+        var result = productCollection.updateOne(query, updates);
+
+        // No println, but still catches "it didn't update"
+        if (result.getMatchedCount() == 0) {
+            throw new IllegalStateException("recordSale failed: product not found for _id=" + productId);
+        }
+        if (result.getModifiedCount() == 0) {
+            // Matched but didn't change (usually amount=0 or fields missing)
+            throw new IllegalStateException("recordSale failed: matched but not modified for _id=" + productId);
+        }
     }
+
+
+
+
     public int getStock(String productId) {
         Document doc = productCollection.find(eq("_id", productId)).first();
         if (doc == null) throw new IllegalArgumentException("Product not found: " + productId);
