@@ -166,7 +166,7 @@ public class OrderController implements Initializable {
             Integer giftAmount = isGiftCard ? giftAmountSpinner.getValue() : null;
 
             double priceAtOrder = isGiftCard
-                    ? giftAmountSpinner.getValue()
+                    ? giftAmount
                     : productDb.getPriceByProductId(productId);
 
             OrderLine line = new OrderLine(productId, quantity, priceAtOrder, giftAmount);
