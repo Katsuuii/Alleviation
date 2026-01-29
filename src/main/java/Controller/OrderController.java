@@ -60,7 +60,7 @@ public class OrderController implements Initializable {
         giftCardBox.setVisible(false);
         giftCardBox.setManaged(false);
 
-        // Default gift amount
+        // Default gift amount (will be replaced when gift mode is enabled)
         giftAmountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 50, 5));
     }
 
