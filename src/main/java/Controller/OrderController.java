@@ -70,8 +70,9 @@ public class OrderController implements Initializable {
         this.userLastName = lastName;
         this.userEmail = email;
 
+        // Avoid "null null" display
         String fn = firstName == null ? "" : firstName.trim();
-        String ln = lastName  == null ? "" : lastName.trim();
+        String ln = lastName == null ? "" : lastName.trim();
         String full = (fn + " " + ln).trim();
         if (full.isBlank()) full = "Guest";
 
@@ -154,13 +155,15 @@ public class OrderController implements Initializable {
                 showAlert(Alert.AlertType.ERROR, "Error", "Product not found in database.");
                 return;
             }
-
             int stock = productDb.getStock(productId);
             if (quantity > stock) {
                 showAlert(Alert.AlertType.ERROR, "Out of Stock",
                         "Only " + stock + " left. Please lower the quantity.");
                 return;
             }
+
+            // Gift cards: chosen amount becomes the price + saved as giftAmount
+            Integer giftAmount = isGiftCard ? giftAmountSpinner.getValue() : null;
 
             double priceAtOrder = isGiftCard
                     ? giftAmountSpinner.getValue()
