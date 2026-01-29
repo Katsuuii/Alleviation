@@ -10,7 +10,6 @@ public class ProductDatabase {
     private final MongoCollection<Document> productCollection;
 
     public ProductDatabase() {
-        // Matches your Compass collection name exactly
         this.productCollection = DatabaseAllev.getInstance().getDatabase().getCollection("Product");
     }
     public String getProductIdByName(String productName) {
@@ -30,7 +29,7 @@ public class ProductDatabase {
         Object priceObj = doc.get("price");
         return ((Number) priceObj).doubleValue();
     }
-    // Initial Save
+    
     public void addProduct(Product product) {
         Document doc = new Document("_id", product.getId())
                 .append("name", product.getName())
@@ -41,10 +40,6 @@ public class ProductDatabase {
         productCollection.insertOne(doc);
     }
 
-    /**
-     * DYNAMIC LOGIC: This method performs the "Sale".
-     * It updates the database in real-time.
-     */
     public void recordSale(String productId, int amount) {
         Document query = new Document("_id", productId);
 
@@ -74,5 +69,4 @@ public class ProductDatabase {
         Object qtyObj = doc.get("quantity");
         return ((Number) qtyObj).intValue();
     }
-
 }
