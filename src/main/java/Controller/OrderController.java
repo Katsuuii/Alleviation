@@ -169,7 +169,8 @@ public class OrderController implements Initializable {
                     ? giftAmountSpinner.getValue()
                     : productDb.getPriceByProductId(productId);
 
-            OrderLine line = new OrderLine(productId, quantity, priceAtOrder);
+            OrderLine line = new OrderLine(productId, quantity, priceAtOrder, giftAmount);
+
             List<OrderLine> lines = new ArrayList<>();
             lines.add(line);
 
@@ -190,6 +191,8 @@ public class OrderController implements Initializable {
             productDb.recordSale(productId, quantity);
             System.out.println("Stock AFTER=" + productDb.getStock(productId));
 
+            System.out.println("recordSale() called for productId=" + productId + " qty=" + quantity);
+            System.out.println("New stock=" + productDb.getStock(productId));
             showAlert(Alert.AlertType.INFORMATION, "Order Submitted!", "Your order has been saved.");
 
             Stage stage = (Stage) submitButton.getScene().getWindow();
