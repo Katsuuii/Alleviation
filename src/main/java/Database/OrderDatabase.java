@@ -32,13 +32,14 @@ public class OrderDatabase {
         }
 
         Document orderDoc = new Document()
-                .append("_id", order.getID())                  // OrderID
-                .append("orderNumber", order.getOrderNumber()) // Order Number
-                .append("userId", order.getUserId())          // UserID
-                .append("firstName", order.getFirstName())    // User first name
-                .append("lastName", order.getLastName())      // User last name
-                .append("email", order.getEmail())            // User email
-                .append("orderLines", orderLineDocs);         // Product lines
+                .append("_id", order.getID())
+                .append("orderNumber", order.getOrderNumber())
+                .append("userId", order.getUserId())
+                .append("firstName", order.getFirstName())
+                .append("lastName", order.getLastName())
+                .append("email", order.getEmail())
+                .append("notes", notes)
+                .append("orderLines", orderLineDocs);
 
         try {
             orderCollection.insertOne(orderDoc);
