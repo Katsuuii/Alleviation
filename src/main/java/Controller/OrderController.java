@@ -213,4 +213,13 @@ public class OrderController implements Initializable {
     private MongoCollection<Document> getMongoCollection() {
         return DatabaseAllev.getInstance().getDatabase().getCollection("orders");
     }
+    public String formatProductDisplay(ProductDatabase productDb, String productId, Integer giftAmount, double priceAtOrder) {
+        String name = productDb.getProductNameById(productId);
+        if (name == null) name = "Unknown Product";
+
+        if (giftAmount != null) {
+            return name + " ($" + giftAmount + ")";
+        }
+        return name + " ($" + String.format("%.2f", priceAtOrder) + ")";
+    }
 }
