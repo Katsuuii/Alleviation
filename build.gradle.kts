@@ -40,9 +40,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("org.controlsfx:controlsfx:11.2.1")
-    implementation("org.mongodb:bson:5.2.0")
+    implementation("org.mongodb:bson:5.6.2")
     implementation ("org.mongodb:mongodb-driver-sync:")
-    implementation(platform("org.mongodb:mongodb-driver-bom:5.6.1"))
+    implementation(platform("org.mongodb:mongodb-driver-bom:5.6.2"))
     implementation("com.dlsc.formsfx:formsfx-core:11.6.0") {
         exclude(group = "org.openjfx")
     }
