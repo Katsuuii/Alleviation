@@ -16,7 +16,6 @@ import org.bson.Document;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class OrderController implements Initializable {
@@ -45,8 +44,6 @@ public class OrderController implements Initializable {
     private boolean isGiftCard = false;
 
     private final ProductDatabase productDb = new ProductDatabase();
-
-    // Must match DB names (or your getProductIdByName must be ignore-case)
     private static final String ROBLOX = "Roblox Gift Card";
     private static final String MINECRAFT = "Minecraft Gift Card";
     private static final String STEAM = "Steam Gift Card";
@@ -81,8 +78,6 @@ public class OrderController implements Initializable {
         FirstandLast.setText(full);
         EmailAddress.setText(em);
     }
-
-
     public void prefillProduct(String productName) {
         this.selectedProduct = productName;
         Product.setText(productName);

@@ -14,10 +14,6 @@ public class OrderDatabase {
     public OrderDatabase(MongoCollection<Document> orderCollection) {
         this.orderCollection = orderCollection;
     }
-
-    /**
-     * Inserts an order into MongoDB with all details including userId, OrderID, OrderNumber, product lines, and notes
-     */
     public void addOrder(Order order, String notes) {
         List<Document> orderLineDocs = new ArrayList<>();
         for (OrderLine line : order.getOrderLines()) {

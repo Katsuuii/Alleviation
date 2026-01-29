@@ -29,7 +29,7 @@ public class ProductDatabase {
         Object priceObj = doc.get("price");
         return ((Number) priceObj).doubleValue();
     }
-    
+
     public void addProduct(Product product) {
         Document doc = new Document("_id", product.getId())
                 .append("name", product.getName())
