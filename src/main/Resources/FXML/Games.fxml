@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+
+<AnchorPane fx:id="Root"
+            prefHeight="400.0" prefWidth="600.0"
+            styleClass="games-root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.GamesController">
+
+   <stylesheets>
+      <URL value="@/CSS/alleviation.css"/>
+      <URL value="@/CSS/games.css"/>
+   </stylesheets>
+
+   <children>
+
+      <!-- HEADER -->
+      <AnchorPane prefHeight="78.0" prefWidth="600.0" styleClass="games-header">
+         <children>
+            <HBox layoutX="14.0" layoutY="10.0" spacing="12.0"
+                  prefWidth="572.0" prefHeight="58.0"
+                  alignment="CENTER_LEFT">
+
+               <children>
+                  <ImageView fitHeight="52.0" fitWidth="52.0" preserveRatio="true">
+                     <image>
+                        <Image url="@/Pictures/MainPhoto.png"/>
+                     </image>
+                  </ImageView>
+
+                  <VBox spacing="1.0">
+                     <children>
+                        <Label text="Games Store" styleClass="games-title"/>
+                        <Label text="Tap a game to view details" styleClass="games-subtitle"/>
+                     </children>
+                  </VBox>
+
+                  <Region HBox.hgrow="ALWAYS"/>
+
+                  <Button text="Log out"
+                          mnemonicParsing="false"
+                          onAction="#Loggingout"
+                          prefWidth="90.0"
+                          prefHeight="30.0"
+                          styleClass="mini-btn"/>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+
+      <!-- GAME GRID -->
+      <TilePane layoutX="35" layoutY="105"
+                prefWidth="530" prefHeight="240"
+                hgap="18" vgap="18"
+                prefColumns="3"
+                styleClass="games-grid">
+
+         <!-- Honkai -->
+         <VBox styleClass="game-card">
+            <children>
+               <ImageView fitHeight="120" fitWidth="136" preserveRatio="true" smooth="true" styleClass="game-image">
+                  <image><Image url="@/Pictures/Honkai.jpg"/></image>
+               </ImageView>
+
+               <Label text="Honkai Star Rail" styleClass="game-name"/>
+               <Label text="\$5.00" styleClass="game-price"/>
+
+               <Button text="View"
+                       onAction="#openGame"
+                       userData="HONKAI"
+                       prefWidth="130" prefHeight="34"
+                       styleClass="games-primary-btn"/>
+            </children>
+         </VBox>
+
+         <!-- ZZZ -->
+         <VBox styleClass="game-card">
+            <children>
+               <ImageView fitHeight="120" fitWidth="136" preserveRatio="true" smooth="true" styleClass="game-image">
+                  <image><Image url="@/Pictures/ZZZ.jpg"/></image>
+               </ImageView>
+
+               <Label text="Zenless Zone Zero" styleClass="game-name"/>
+               <Label text="\$5.00" styleClass="game-price"/>
+
+               <Button text="View"
+                       onAction="#openGame"
+                       userData="ZZZ"
+                       prefWidth="130" prefHeight="34"
+                       styleClass="games-primary-btn"/>
+            </children>
+         </VBox>
+
+         <!-- Overcooked -->
+         <VBox styleClass="game-card">
+            <children>
+               <ImageView fitHeight="120" fitWidth="136" preserveRatio="true" smooth="true" styleClass="game-image">
+                  <image><Image url="@/Pictures/Overcooked Image.jpg"/></image>
+               </ImageView>
+
+               <Label text="Overcooked" styleClass="game-name"/>
+               <Label text="\$26.49" styleClass="game-price"/>
+
+               <Button text="View"
+                       onAction="#openGame"
+                       userData="OVERCOOKED"
+                       prefWidth="130" prefHeight="34"
+                       styleClass="games-primary-btn"/>
+            </children>
+         </VBox>
+
+      </TilePane>
+
+      <!-- Back -->
+      <Button layoutX="20.0" layoutY="360.0"
+              text="Go back"
+              mnemonicParsing="false"
+              onAction="#GobackUser"
+              prefWidth="90.0"
+              prefHeight="30.0"
+              styleClass="mini-btn"/>
+
+   </children>
+</AnchorPane>

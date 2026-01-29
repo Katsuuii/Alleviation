@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import java.net.URL?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0"
+            styleClass="app-root"
+            xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.UserController">
+
+   <stylesheets>
+      <URL value="@/CSS/user-dashboard.css"/>
+   </stylesheets>
+
+   <children>
+
+      <!-- HEADER -->
+      <AnchorPane prefHeight="86.0" prefWidth="600.0"
+                  styleClass="header">
+         <children>
+            <HBox layoutX="14.0" layoutY="10.0" spacing="12.0"
+                  prefWidth="572.0" prefHeight="66.0"
+                  alignment="CENTER_LEFT">
+
+               <children>
+                  <ImageView fitHeight="56.0" fitWidth="56.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../Pictures/MainPhoto.png"/>
+                     </image>
+                  </ImageView>
+
+                  <VBox spacing="1.0">
+                     <children>
+                        <Label text="Alleviation" styleClass="title"/>
+                        <Label text="Shop Dashboard" styleClass="subtitle"/>
+                     </children>
+                  </VBox>
+
+                  <Region HBox.hgrow="ALWAYS"/>
+
+                  <VBox alignment="CENTER_RIGHT" spacing="1.0">
+                     <children>
+                        <Label fx:id="FullNameLabel" text="Full Name" styleClass="user-name"/>
+                        <Label fx:id="EmailLabel" text="Email" styleClass="user-email"/>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+
+      <!-- MAIN -->
+      <VBox layoutX="0" layoutY="96" prefWidth="600" prefHeight="304"
+            alignment="TOP_CENTER" spacing="14" styleClass="content">
+
+         <Label text="Choose a section to continue" styleClass="hint"/>
+
+         <HBox spacing="24" alignment="TOP_CENTER" prefWidth="560">
+            <!-- Games Card -->
+            <VBox alignment="TOP_CENTER" spacing="10"
+                  prefWidth="240" prefHeight="230"
+                  styleClass="card">
+               <children>
+                  <ImageView fitHeight="110" fitWidth="110" preserveRatio="true" smooth="true">
+                     <image>
+                        <Image url="@../Pictures/Controller1.png"/>
+                     </image>
+                  </ImageView>
+
+                  <Label text="Games" styleClass="card-title"/>
+                  <Label text="Browse and purchase games" styleClass="card-desc"/>
+
+                  <Button fx:id="Gamebutton"
+                          text="Go to Games"
+                          mnemonicParsing="false"
+                          onAction="#GotoGames"
+                          prefWidth="180" prefHeight="38"
+                          styleClass="primary-btn"/>
+               </children>
+            </VBox>
+
+            <!-- Gift Cards Card -->
+            <VBox alignment="TOP_CENTER" spacing="10"
+                  prefWidth="240" prefHeight="230"
+                  styleClass="card">
+               <children>
+                  <ImageView fitHeight="110" fitWidth="110" preserveRatio="true" smooth="true">
+                     <image>
+                        <Image url="@../Pictures/GiftCard.png"/>
+                     </image>
+                  </ImageView>
+
+                  <Label text="Gift Cards" styleClass="card-title"/>
+                  <Label text="Pick a gift card to buy" styleClass="card-desc"/>
+
+                  <Button fx:id="GiftCardButton"
+                          text="Go to Gift Cards"
+                          mnemonicParsing="false"
+                          onAction="#GotoGiftCards"
+                          prefWidth="180" prefHeight="38"
+                          styleClass="primary-btn"/>
+               </children>
+            </VBox>
+         </HBox>
+
+         <!-- footer row -->
+         <HBox prefWidth="560" alignment="CENTER_LEFT" styleClass="footer">
+            <Button text="Logout"
+                    mnemonicParsing="false"
+                    onAction="#Loggingout"
+                    prefHeight="30" prefWidth="90"
+                    styleClass="mini-btn"/>
+         </HBox>
+
+      </VBox>
+
+   </children>
+</AnchorPane>

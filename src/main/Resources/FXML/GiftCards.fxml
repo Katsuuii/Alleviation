@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="Root" prefHeight="640.0" prefWidth="600.0"
+            styleClass="gc-root"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.GiftCardsController">
+
+   <stylesheets>
+      <URL value="@/CSS/alleviation.css" />
+      <URL value="@/CSS/giftcards.css" />
+   </stylesheets>
+
+   <children>
+
+      <!-- HEADER -->
+      <AnchorPane prefHeight="78.0" prefWidth="600.0"
+                  styleClass="gc-header"
+                  AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+         <children>
+            <HBox alignment="CENTER_LEFT"
+                  layoutX="14.0" layoutY="10.0"
+                  prefHeight="58.0" prefWidth="572.0"
+                  spacing="12.0">
+
+               <children>
+                  <ImageView fitHeight="52.0" fitWidth="52.0" preserveRatio="true">
+                     <image>
+                        <Image url="@/Pictures/MainPhoto.png" />
+                     </image>
+                  </ImageView>
+
+                  <VBox spacing="1.0">
+                     <children>
+                        <Label styleClass="gc-title" text="Gift Cards Store" />
+                        <Label styleClass="gc-subtitle" text="Tap a card to view details" />
+                     </children>
+                  </VBox>
+
+                  <Region HBox.hgrow="ALWAYS" />
+
+                  <Button mnemonicParsing="false"
+                          onAction="#Loggingout"
+                          prefHeight="30.0" prefWidth="90.0"
+                          styleClass="mini-btn"
+                          text="Log out" />
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+
+      <!-- GRID (more vertical room above footer) -->
+      <TilePane hgap="18" vgap="18"
+                prefColumns="4"
+                styleClass="gc-grid"
+                AnchorPane.leftAnchor="35"
+                AnchorPane.rightAnchor="35"
+                AnchorPane.topAnchor="105"
+                AnchorPane.bottomAnchor="110">
+
+         <!-- Roblox -->
+         <VBox styleClass="gc-card">
+            <children>
+               <ImageView fitHeight="110" fitWidth="110" preserveRatio="true" smooth="true">
+                  <image><Image url="@/Pictures/GiftCard_Roblox.png" /></image>
+               </ImageView>
+
+               <Label styleClass="gc-name" text="Roblox" />
+               <Label styleClass="gc-range" text="\$10–$50" />
+
+               <Button mnemonicParsing="false"
+                       onAction="#openGiftCard"
+                       prefHeight="34" prefWidth="120"
+                       styleClass="gc-primary-btn"
+                       text="View"
+                       userData="ROBLOX" />
+            </children>
+         </VBox>
+
+         <!-- Minecraft -->
+         <VBox styleClass="gc-card">
+            <children>
+               <ImageView fitHeight="110" fitWidth="110" preserveRatio="true" smooth="true">
+                  <image><Image url="@/Pictures/Minecraft.png" /></image>
+               </ImageView>
+
+               <Label styleClass="gc-name" text="Minecraft" />
+               <Label styleClass="gc-range" text="\$30" />
+
+               <Button mnemonicParsing="false"
+                       onAction="#openGiftCard"
+                       prefHeight="34" prefWidth="120"
+                       styleClass="gc-primary-btn"
+                       text="View"
+                       userData="MINECRAFT" />
+            </children>
+         </VBox>
+
+         <!-- Steam -->
+         <VBox styleClass="gc-card">
+            <children>
+               <ImageView fitHeight="110" fitWidth="110" preserveRatio="true" smooth="true">
+                  <image><Image url="@/Pictures/Steam.png" /></image>
+               </ImageView>
+
+               <Label styleClass="gc-name" text="Steam" />
+               <Label styleClass="gc-range" text="\$5–$20" />
+
+               <Button mnemonicParsing="false"
+                       onAction="#openGiftCard"
+                       prefHeight="34" prefWidth="120"
+                       styleClass="gc-primary-btn"
+                       text="View"
+                       userData="STEAM" />
+            </children>
+         </VBox>
+
+         <!-- Visa -->
+         <VBox styleClass="gc-card">
+            <children>
+               <ImageView fitHeight="110" fitWidth="110" preserveRatio="true" smooth="true">
+                  <image><Image url="@/Pictures/Visa.png" /></image>
+               </ImageView>
+
+               <Label styleClass="gc-name" text="Visa" />
+               <Label styleClass="gc-range" text="\$5–$50" />
+
+               <Button mnemonicParsing="false"
+                       onAction="#openGiftCard"
+                       prefHeight="34" prefWidth="120"
+                       styleClass="gc-primary-btn"
+                       text="View"
+                       userData="VISA" />
+            </children>
+         </VBox>
+
+      </TilePane>
+
+      <!-- BACK FOOTER (lower + still clickable) -->
+      <HBox alignment="CENTER_LEFT" prefWidth="600.0"
+            styleClass="gc-footer"
+            AnchorPane.bottomAnchor="8.0"
+            AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+         <children>
+            <Button mnemonicParsing="false"
+                    onAction="#GobackUser"
+                    prefHeight="30.0" prefWidth="90.0"
+                    styleClass="mini-btn"
+                    text="Go back" />
+         </children>
+      </HBox>
+
+   </children>
+</AnchorPane>
