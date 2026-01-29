@@ -37,7 +37,7 @@
                <children>
                   <ImageView fitHeight="58.0" fitWidth="58.0" preserveRatio="true">
                      <image>
-                        <Image url="@../Pictures/MainPhoto.png"/>
+                        <Image url="@../../../../src/main/Resources/Pictures/MainPhoto.png"/>
                      </image>
                   </ImageView>
 
@@ -79,7 +79,7 @@
             <children>
                <ImageView fitHeight="140.0" fitWidth="136.0" preserveRatio="true">
                   <image>
-                     <Image url="@../Pictures/Honkai.jpg"/>
+                     <Image url="@../../../../src/main/Resources/Pictures/Honkai.jpg"/>
                   </image>
                </ImageView>
 
@@ -114,7 +114,7 @@
             <children>
                <ImageView fitHeight="140.0" fitWidth="136.0" preserveRatio="true">
                   <image>
-                     <Image url="@../Pictures/ZZZ.jpg"/>
+                     <Image url="@../../../../src/main/Resources/Pictures/ZZZ.jpg"/>
                   </image>
                </ImageView>
 
@@ -149,7 +149,7 @@
             <children>
                <ImageView fitHeight="140.0" fitWidth="136.0" preserveRatio="true">
                   <image>
-                     <Image url="@../Pictures/Overcooked Image.jpg"/>
+                     <Image url="@../../../../src/main/Resources/Pictures/Overcooked Image.jpg"/>
                   </image>
                </ImageView>
 

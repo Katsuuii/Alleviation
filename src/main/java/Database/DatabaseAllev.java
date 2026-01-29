@@ -7,7 +7,7 @@ import org.bson.Document;
 import Database.DatabaseAllev;
 public class DatabaseAllev {
     protected final String DB_URI =
-            "mongodb+srv://Katsuu:Mark123@alleviation.48lfkfh.mongodb.net/?appName=Alleviation";
+            "mongodb+srv://Katsuu:1Brx9AEizY9oGn7X@alleviation.48lfkfh.mongodb.net/?appName=Alleviation";
 
     protected final String DB_NAME = "Alleviation";
     private static final DatabaseAllev instance = new DatabaseAllev();

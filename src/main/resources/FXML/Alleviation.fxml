@@ -43,7 +43,7 @@
                                    fitWidth="70.0"
                                    preserveRatio="true">
                             <image>
-                                <Image url="@../Pictures/MainPhoto.png"/>
+                                <Image url="@../../../../src/main/Resources/Pictures/MainPhoto.png"/>
                             </image>
                         </ImageView>
 

@@ -39,7 +39,7 @@
                <children>
                   <ImageView fitHeight="48.0" fitWidth="48.0" preserveRatio="true">
                      <image>
-                        <Image url="@../Pictures/MainPhoto.png"/>
+                        <Image url="@../../../../src/main/Resources/Pictures/MainPhoto.png"/>
                      </image>
                   </ImageView>
 
