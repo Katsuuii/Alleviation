@@ -1,13 +1,16 @@
 package Controller;
 
-import Database.DatabaseAllev;
-import Database.OrderDatabase;
-import Database.ProductDatabase;
+import Database.*;
 import OrderReceiptLogic.Order;
 import OrderReceiptLogic.OrderLine;
+import OrderReceiptLogic.Receipt;
+
 import com.mongodb.client.MongoCollection;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -20,12 +23,12 @@ import java.util.ResourceBundle;
 
 public class OrderController implements Initializable {
 
-
+    // Gift Card Picker UI
     @FXML private VBox giftCardBox;
     @FXML private ComboBox<String> giftCardTypeCombo;
     @FXML private Spinner<Integer> giftAmountSpinner;
 
-
+    // Normal UI
     @FXML private Label FirstandLast;
     @FXML private Label EmailAddress;
     @FXML private Label Product;
@@ -34,7 +37,7 @@ public class OrderController implements Initializable {
     @FXML private TextArea notesArea;
     @FXML private Button submitButton;
 
-
+    // Session/state
     private int userId;
     private String userFirstName;
     private String userLastName;
@@ -44,6 +47,8 @@ public class OrderController implements Initializable {
     private boolean isGiftCard = false;
 
     private final ProductDatabase productDb = new ProductDatabase();
+
+    // Must match DB names exactly
     private static final String ROBLOX = "Roblox Gift Card";
     private static final String MINECRAFT = "Minecraft Gift Card";
     private static final String STEAM = "Steam Gift Card";
@@ -53,11 +58,11 @@ public class OrderController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         quantitySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
 
-
+        // Hide gift card UI by default
         giftCardBox.setVisible(false);
         giftCardBox.setManaged(false);
 
-
+        // Default gift amount (will be replaced when gift mode is enabled)
         giftAmountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 50, 5));
     }
 
@@ -66,7 +71,6 @@ public class OrderController implements Initializable {
         this.userFirstName = firstName;
         this.userLastName = lastName;
         this.userEmail = email;
-
 
         String fn = firstName == null ? "" : firstName.trim();
         String ln = lastName == null ? "" : lastName.trim();
@@ -78,10 +82,10 @@ public class OrderController implements Initializable {
         FirstandLast.setText(full);
         EmailAddress.setText(em);
     }
+
     public void prefillProduct(String productName) {
         this.selectedProduct = productName;
         Product.setText(productName);
-
 
         if (!isGiftCard) {
             giftCardBox.setVisible(false);
@@ -89,16 +93,13 @@ public class OrderController implements Initializable {
         }
     }
 
-
     public void enableGiftCardMode(String defaultCardName) {
         isGiftCard = true;
 
         giftCardBox.setVisible(true);
         giftCardBox.setManaged(true);
 
-
         giftCardTypeCombo.getItems().setAll(ROBLOX, MINECRAFT, STEAM, VISA);
-
 
         giftCardTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) return;
@@ -107,13 +108,11 @@ public class OrderController implements Initializable {
             applyGiftRangeFor(newVal);
         });
 
-
         if (defaultCardName != null && giftCardTypeCombo.getItems().contains(defaultCardName)) {
             giftCardTypeCombo.setValue(defaultCardName);
         } else {
             giftCardTypeCombo.setValue(ROBLOX);
         }
-
 
         applyGiftRangeFor(giftCardTypeCombo.getValue());
     }
@@ -122,11 +121,11 @@ public class OrderController implements Initializable {
         int min, max, step;
 
         switch (cardName) {
-            case ROBLOX -> { min = 5; max = 50; step = 5; }  // updated to match your UI
-            case STEAM  -> { min = 5;  max = 20; step = 5; }
-            case VISA   -> { min = 5;  max = 50; step = 5; }
-            case MINECRAFT -> { min = 30; max = 30; step = 1; } // fixed value
-            default     -> { min = 5;  max = 50; step = 5; }
+            case ROBLOX -> { min = 5; max = 50; step = 5; }
+            case STEAM  -> { min = 5; max = 20; step = 5; }
+            case VISA   -> { min = 5; max = 50; step = 5; }
+            case MINECRAFT -> { min = 30; max = 30; step = 1; }
+            default -> { min = 5; max = 50; step = 5; }
         }
 
         giftAmountSpinner.setValueFactory(
@@ -150,13 +149,13 @@ public class OrderController implements Initializable {
                 showAlert(Alert.AlertType.ERROR, "Error", "Product not found in database.");
                 return;
             }
+
             int stock = productDb.getStock(productId);
             if (quantity > stock) {
                 showAlert(Alert.AlertType.ERROR, "Out of Stock",
                         "Only " + stock + " left. Please lower the quantity.");
                 return;
             }
-
 
             Integer giftAmount = isGiftCard ? giftAmountSpinner.getValue() : null;
 
@@ -174,24 +173,34 @@ public class OrderController implements Initializable {
 
             Order order = new Order(id, orderNumber, userId, lines, userFirstName, userLastName, userEmail);
 
+            // Save order to "orders"
             OrderDatabase orderDb = new OrderDatabase(getMongoCollection());
             orderDb.addOrder(order, notes);
+            OrderLineDatabase orderLineDb = new OrderLineDatabase();
+            orderLineDb.addOrderLinesForOrder(order);
 
-
+            // Reduce stock only for non-giftcards
             if (!isGiftCard) {
                 productDb.recordSale(productId, quantity);
             }
-            System.out.println("recordSale() called for productId=" + productId + " qty=" + quantity);
-            System.out.println("Stock BEFORE=" + productDb.getStock(productId));
-            productDb.recordSale(productId, quantity);
-            System.out.println("Stock AFTER=" + productDb.getStock(productId));
 
-            System.out.println("recordSale() called for productId=" + productId + " qty=" + quantity);
-            System.out.println("New stock=" + productDb.getStock(productId));
-            showAlert(Alert.AlertType.INFORMATION, "Order Submitted!", "Your order has been saved.");
+            // ✅ Save receipt rows to "Receipt" collection (one per order line)
+            ReceiptDatabase receiptDb = new ReceiptDatabase();
+            receiptDb.addReceiptForOrder(order);
+
+            // Switch this SAME window to Receipt.fxml
+            Receipt receipt = new Receipt(order, "Unknown");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Receipt.fxml"));
+            Parent receiptRoot = loader.load();
+
+            ReceiptController rc = loader.getController();
+            rc.setReceipt(receipt, notes);
 
             Stage stage = (Stage) submitButton.getScene().getWindow();
-            stage.close();
+            stage.setTitle("Receipt");
+            stage.setScene(new Scene(receiptRoot));
+            stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -217,14 +226,5 @@ public class OrderController implements Initializable {
 
     private MongoCollection<Document> getMongoCollection() {
         return DatabaseAllev.getInstance().getDatabase().getCollection("orders");
-    }
-    public String formatProductDisplay(ProductDatabase productDb, String productId, Integer giftAmount, double priceAtOrder) {
-        String name = productDb.getProductNameById(productId);
-        if (name == null) name = "Unknown Product";
-
-        if (giftAmount != null) {
-            return name + " ($" + giftAmount + ")";
-        }
-        return name + " ($" + String.format("%.2f", priceAtOrder) + ")";
     }
 }

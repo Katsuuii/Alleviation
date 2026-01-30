@@ -1,12 +1,15 @@
 package Controller;
 
+import Database.ProductDatabase;
 import OrderReceiptLogic.Order;
 import OrderReceiptLogic.OrderLine;
 import OrderReceiptLogic.Receipt;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -38,6 +41,10 @@ public class ReceiptController {
     @FXML private TableColumn<ReceiptRow, String> colSubtotal;
 
     private Receipt receipt;
+    private String notesText = "—";
+
+    // ✅ use DB lookup for names
+    private final ProductDatabase productDb = new ProductDatabase();
 
     // Simple row model for TableView
     public static class ReceiptRow {
@@ -59,8 +66,10 @@ public class ReceiptController {
         public String getSubtotal() { return subtotal.get(); }
     }
 
-    public void setReceipt(Receipt receipt) {
+    // Your OrderController calls this
+    public void setReceipt(Receipt receipt, String notes) {
         this.receipt = receipt;
+        this.notesText = (notes == null || notes.isBlank()) ? "—" : notes;
         showReceipt();
     }
 
@@ -74,12 +83,13 @@ public class ReceiptController {
         dateLabel.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
         // Customer
-        String fullName = (order.getFirstName() + " " + order.getLastName()).trim();
+        String fullName = ((order.getFirstName() == null ? "" : order.getFirstName()) + " " +
+                (order.getLastName() == null ? "" : order.getLastName())).trim();
         fullNameLabel.setText(fullName.isBlank() ? "—" : fullName);
         emailLabel.setText(order.getEmail() == null ? "—" : order.getEmail());
 
-        // Notes (your current Receipt class doesn't store notes; keep placeholder)
-        notesLabel.setText("—");
+        // Notes
+        notesLabel.setText(notesText);
 
         // Table columns
         colProduct.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getProduct()));
@@ -92,10 +102,14 @@ public class ReceiptController {
         double total = 0;
 
         for (OrderLine line : order.getOrderLines()) {
-            // Display name: productId (+ denomination if gift card)
-            String displayProduct = line.getProductId();
+
+            // ✅ look up name by ID
+            String productName = productDb.getProductNameById(line.getProductId());
+            if (productName == null) productName = line.getProductId(); // fallback
+
+            // Gift cards: show chosen denomination
             if (line.getGiftAmount() != null) {
-                displayProduct = displayProduct + " ($" + line.getGiftAmount() + ")";
+                productName = productName + " ($" + line.getGiftAmount() + ")";
             }
 
             double unit = line.getPriceAtOrder();
@@ -103,7 +117,7 @@ public class ReceiptController {
             total += sub;
 
             rows.add(new ReceiptRow(
-                    displayProduct,
+                    productName,
                     line.getQuantity(),
                     String.format(Locale.US, "$%.2f", unit),
                     String.format(Locale.US, "$%.2f", sub)
@@ -123,14 +137,12 @@ public class ReceiptController {
 
     @FXML
     private void handleBack() {
-        // If you open Receipt in a new Stage, "Back" can just close it.
+        // If you want Back to return to UserInterface instead, tell me and I’ll wire it.
         handleClose();
     }
 
     @FXML
     private void handlePrint() {
         // Optional: implement printing later
-        // For now, you can just close or show an alert
-        // handleClose();
     }
 }

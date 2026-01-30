@@ -141,7 +141,7 @@ public class GiftCardsController {
 
         Scene scene = new Scene(layout);
 
-        // load your CSS (make sure giftcards.css exists)
+
         if (getClass().getResource("/CSS/alleviation.css") != null) {
             scene.getStylesheets().add(getClass().getResource("/CSS/alleviation.css").toExternalForm());
         }
@@ -154,7 +154,7 @@ public class GiftCardsController {
     }
 
 
-    // If you update FXML to use openGiftCard, you can delete these later.
+
     @FXML private void handlePurchaseRoblox() { openOrderForm(ROBLOX_GC); }
     @FXML private void handlePurchaseMinecraft() { openOrderForm(MINECRAFT_GC); }
     @FXML private void handlePurchaseSteam() { openOrderForm(STEAM_GC); }
