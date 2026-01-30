@@ -29,7 +29,7 @@ public class GiftCardsController {
     private String loggedInLastName;
     private String loggedInUserEmail;
 
-    // ✅ Match GamesController: store logged-in user
+
     public void setLoggedInUser(int userId, String firstName, String lastName, String email) {
         this.loggedInUserId = userId;
         this.loggedInFirstName = firstName;
@@ -37,13 +37,13 @@ public class GiftCardsController {
         this.loggedInUserEmail = email;
     }
 
-    // ✅ Gift card display names (what shows in Order form)
+
     private static final String ROBLOX_GC = "Roblox Gift Card";
     private static final String MINECRAFT_GC = "Minecraft Gift Card";
     private static final String STEAM_GC = "Steam Gift Card";
     private static final String VISA_GC = "Visa Gift Card";
 
-    // --- Popup data record ---
+
     private record CardInfo(String title, String range, String imagePath, String desc) {}
 
     private final Map<String, CardInfo> cards = Map.of(
@@ -65,7 +65,7 @@ public class GiftCardsController {
             )
     );
 
-    // -------------------- Open Order Form (same as GamesController) --------------------
+
     private void openOrderForm(String productName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Order.fxml"));
@@ -86,7 +86,7 @@ public class GiftCardsController {
         }
     }
 
-    // -------------------- NEW: View Button Handler (popup) --------------------
+
     @FXML
     private void openGiftCard(ActionEvent event) {
         if (!(event.getSource() instanceof Button btn)) return;
@@ -153,14 +153,14 @@ public class GiftCardsController {
         dialog.showAndWait();
     }
 
-    // -------------------- Keep these if your FXML still calls them --------------------
+
     // If you update FXML to use openGiftCard, you can delete these later.
     @FXML private void handlePurchaseRoblox() { openOrderForm(ROBLOX_GC); }
     @FXML private void handlePurchaseMinecraft() { openOrderForm(MINECRAFT_GC); }
     @FXML private void handlePurchaseSteam() { openOrderForm(STEAM_GC); }
     @FXML private void handlePurchaseVisa() { openOrderForm(VISA_GC); }
 
-    // -------------------- Scene Navigation --------------------
+
     @FXML
     public void GobackUser(ActionEvent event) {
         switchSceneWithUser(event, "/FXML/UserInterface.fxml");
@@ -171,7 +171,7 @@ public class GiftCardsController {
         switchScene(event, "/FXML/Alleviation.fxml");
     }
 
-    // -------------------- Helper Methods --------------------
+
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));

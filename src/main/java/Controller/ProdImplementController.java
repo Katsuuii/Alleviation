@@ -29,17 +29,17 @@ public class ProdImplementController {
         dialog.setTitle("Add Product");
         dialog.setHeaderText("Create a new inventory record");
 
-        // Buttons
+
         ButtonType addButtonType = new ButtonType("Add to Inventory", ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
-        // Layout
+
         GridPane grid = new GridPane();
         grid.setHgap(12);
         grid.setVgap(12);
         grid.setPadding(new Insets(18, 18, 10, 18));
 
-        // Fields
+
         TextField nameField = new TextField();
         nameField.setPromptText("e.g. Overcooked");
 
@@ -49,12 +49,12 @@ public class ProdImplementController {
         TextField qtyField = new TextField();
         qtyField.setPromptText("e.g. 10");
 
-        // Nice widths
+
         nameField.setPrefWidth(220);
         priceField.setPrefWidth(220);
         qtyField.setPrefWidth(220);
 
-        // Restrict input: price numeric + optional dot, qty digits only
+
         priceField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
             return newText.matches("\\d*(\\.\\d{0,2})?") ? change : null;
@@ -65,7 +65,7 @@ public class ProdImplementController {
             return newText.matches("\\d*") ? change : null;
         }));
 
-        // Add to grid
+
         Label nameLbl = new Label("Name");
         Label priceLbl = new Label("Price ($)");
         Label qtyLbl = new Label("Stock");
@@ -81,7 +81,7 @@ public class ProdImplementController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Disable Add button until valid
+
         Button addBtn = (Button) dialog.getDialogPane().lookupButton(addButtonType);
         addBtn.setDisable(true);
 

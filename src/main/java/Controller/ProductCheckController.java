@@ -23,7 +23,7 @@ public class ProductCheckController {
 
     private static final int LOW_STOCK_THRESHOLD = 5;
 
-    // FXML
+
     @FXML private TableView<ProductRow> productTable;
     @FXML private TableColumn<ProductRow, String> colId;
     @FXML private TableColumn<ProductRow, String> colName;
@@ -121,7 +121,7 @@ public class ProductCheckController {
         return new ProductRow(id, name, price, qty, sales);
     }
 
-    // ===== Buttons =====
+
     @FXML
     private void handleRename() {
         actionLabel.setStyle("-fx-text-fill: #D6002B; -fx-font-weight: 700;");
@@ -149,7 +149,7 @@ public class ProductCheckController {
             return;
         }
 
-        // ✅ Allow duplicates: no check needed
+
         repo.renameProduct(productId, newName);
 
         actionLabel.setStyle("-fx-text-fill: #2E7D32; -fx-font-weight: 800;");

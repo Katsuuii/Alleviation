@@ -20,12 +20,12 @@ import java.util.ResourceBundle;
 
 public class OrderController implements Initializable {
 
-    // Gift Card Picker UI
+
     @FXML private VBox giftCardBox;
     @FXML private ComboBox<String> giftCardTypeCombo;
     @FXML private Spinner<Integer> giftAmountSpinner;
 
-    // Normal UI
+
     @FXML private Label FirstandLast;
     @FXML private Label EmailAddress;
     @FXML private Label Product;
@@ -34,7 +34,7 @@ public class OrderController implements Initializable {
     @FXML private TextArea notesArea;
     @FXML private Button submitButton;
 
-    // Session/state
+
     private int userId;
     private String userFirstName;
     private String userLastName;
@@ -53,11 +53,11 @@ public class OrderController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         quantitySpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
 
-        // Hide gift card UI by default
+
         giftCardBox.setVisible(false);
         giftCardBox.setManaged(false);
 
-        // Default gift amount (will be replaced when gift mode is enabled)
+
         giftAmountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(5, 50, 5));
     }
 
@@ -67,7 +67,7 @@ public class OrderController implements Initializable {
         this.userLastName = lastName;
         this.userEmail = email;
 
-        // Avoid "null null" display
+
         String fn = firstName == null ? "" : firstName.trim();
         String ln = lastName == null ? "" : lastName.trim();
         String full = (fn + " " + ln).trim();
@@ -82,24 +82,24 @@ public class OrderController implements Initializable {
         this.selectedProduct = productName;
         Product.setText(productName);
 
-        // If not gift card mode, keep picker hidden
+
         if (!isGiftCard) {
             giftCardBox.setVisible(false);
             giftCardBox.setManaged(false);
         }
     }
 
-    // ✅ Call this from GiftCardsController to enable choosing card type + amount
+
     public void enableGiftCardMode(String defaultCardName) {
         isGiftCard = true;
 
         giftCardBox.setVisible(true);
         giftCardBox.setManaged(true);
 
-        // Fill the dropdown
+
         giftCardTypeCombo.getItems().setAll(ROBLOX, MINECRAFT, STEAM, VISA);
 
-        // When user changes card, update product + amount range
+
         giftCardTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) return;
             selectedProduct = newVal;
@@ -107,14 +107,14 @@ public class OrderController implements Initializable {
             applyGiftRangeFor(newVal);
         });
 
-        // Choose default selection
+
         if (defaultCardName != null && giftCardTypeCombo.getItems().contains(defaultCardName)) {
             giftCardTypeCombo.setValue(defaultCardName);
         } else {
             giftCardTypeCombo.setValue(ROBLOX);
         }
 
-        // Apply initial range
+
         applyGiftRangeFor(giftCardTypeCombo.getValue());
     }
 
@@ -157,7 +157,7 @@ public class OrderController implements Initializable {
                 return;
             }
 
-            // Gift cards: chosen amount becomes the price + saved as giftAmount
+
             Integer giftAmount = isGiftCard ? giftAmountSpinner.getValue() : null;
 
             double priceAtOrder = isGiftCard
@@ -177,7 +177,7 @@ public class OrderController implements Initializable {
             OrderDatabase orderDb = new OrderDatabase(getMongoCollection());
             orderDb.addOrder(order, notes);
 
-            // If gift cards should NOT reduce stock, wrap this in if (!isGiftCard)
+
             if (!isGiftCard) {
                 productDb.recordSale(productId, quantity);
             }

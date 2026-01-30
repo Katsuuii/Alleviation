@@ -16,7 +16,7 @@ public class CEOInterface {
     @FXML
     private Label CEOLabelWelcome;
 
-    // This is called by the Login controller to inject the name into the UI
+
     public void ShowLabel(String firstname, String lastname) {
         if (CEOLabelWelcome != null) {
             CEOLabelWelcome.setText("Welcome! " + firstname + " " + lastname);

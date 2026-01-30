@@ -19,7 +19,7 @@ public class LoginController {
     @FXML private PasswordField UserPassField;
     @FXML private Label LogErrorLabel;
 
-    // -------------------- Go to Register Screen --------------------
+
     @FXML
     public void GotoRegister(ActionEvent event) {
         try {
@@ -34,7 +34,7 @@ public class LoginController {
         }
     }
 
-    // -------------------- Go to Main Menu (without login) --------------------
+
     @FXML
     public void GotoMainMenu(ActionEvent event) {
         try {
@@ -49,7 +49,7 @@ public class LoginController {
         }
     }
 
-    // -------------------- Handle Login Button --------------------
+
     @FXML
     public void handleLogButton(ActionEvent event) {
         String username = Userlogfield.getText();
@@ -73,7 +73,7 @@ public class LoginController {
         org.bson.Document authenticatedUser = userDb.authenticateUser(username, password);
 
         if (authenticatedUser != null) {
-            // Login success
+
             LogErrorLabel.setText("Login Successful!");
             LogErrorLabel.setStyle("-fx-text-fill: green;");
 
@@ -88,7 +88,7 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/UserInterface.fxml"));
                 Parent root = loader.load();
 
-                // Pass user info including ID
+
                 UserController userController = loader.getController();
                 userController.setLoggedInUser(userId, firstName, lastName, email);
 

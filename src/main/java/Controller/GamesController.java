@@ -70,7 +70,7 @@ public class GamesController {
     private void openGame(ActionEvent event) {
         if (!(event.getSource() instanceof Button btn)) return;
 
-        String id = (String) btn.getUserData(); // HONKAI / ZZZ / OVERCOOKED
+        String id = (String) btn.getUserData();
         GameInfo info = games.get(id);
         if (info != null) showGamePopup(info, id);
     }
@@ -79,7 +79,7 @@ public class GamesController {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
 
-        // If Root is available, make it owned by your current window (prevents behind-window popups)
+
         if (Root != null && Root.getScene() != null) {
             dialog.initOwner(Root.getScene().getWindow());
         }
@@ -106,7 +106,7 @@ public class GamesController {
         Button buy = new Button("Purchase");
         buy.getStyleClass().add("games-primary-btn");
         buy.setOnAction(ev -> {
-            purchaseById(id);   // ✅ uses your existing Order flow
+            purchaseById(id);
             dialog.close();
         });
 
@@ -121,7 +121,7 @@ public class GamesController {
 
         Scene scene = new Scene(layout);
 
-        // load your existing CSS + optional games.css if you added it
+
         if (getClass().getResource("/CSS/alleviation.css") != null) {
             scene.getStylesheets().add(getClass().getResource("/CSS/alleviation.css").toExternalForm());
         }
@@ -141,7 +141,7 @@ public class GamesController {
         }
     }
 
-    // -------------------- Purchase Button Handlers --------------------
+
     @FXML
     private void handlePurchaseHonkai() {
         openOrderForm(TARKOV_NAME);
@@ -157,7 +157,7 @@ public class GamesController {
         openOrderForm(OVERCOOKED_NAME);
     }
 
-    // -------------------- Open Order Form --------------------
+
     private void openOrderForm(String productName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Order.fxml"));
@@ -180,7 +180,7 @@ public class GamesController {
         }
     }
 
-    // -------------------- Scene Navigation --------------------
+
     @FXML
     public void GobackUser(ActionEvent event) {
         switchSceneWithUser(event, "/FXML/UserInterface.fxml");
@@ -191,7 +191,7 @@ public class GamesController {
         switchScene(event, "/FXML/Alleviation.fxml");
     }
 
-    // -------------------- Helper Methods --------------------
+
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));

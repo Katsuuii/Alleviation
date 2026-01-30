@@ -39,7 +39,7 @@ public class UserController {
         if (EmailLabel != null) EmailLabel.setText(email);
     }
 
-    // ---------------- Scene Navigation ----------------
+
 
     @FXML
     public void GotoGames(ActionEvent event) {

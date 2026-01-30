@@ -30,20 +30,20 @@ public class CEOController {
         String lastName = CEOLastField.getText().trim();
         String password = CEOPasswordField.getText();
 
-        // 1. Validation
+
         if (firstName.isEmpty() || lastName.isEmpty()) {
             updateStatus("First and Last name are required.", "red");
             return;
         }
 
-        // 2. Database Check
+
         Document existingCEO = db.findCEOByName(firstName, lastName);
 
         if (existingCEO != null) {
-            // Existing user found
+
             navigateToInterface(event, firstName, lastName);
         } else {
-            // 3. Registration Flow (First time setup)
+
             if (password.isEmpty()) {
                 updateStatus("Setup password required for new CEO.", "red");
                 return;
@@ -66,7 +66,7 @@ public class CEOController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/CEOInterface.fxml"));
             Parent root = loader.load();
 
-            // Resolve Conflict: Pass data to the NEXT controller
+
             CEOInterface controller = loader.getController();
             controller.ShowLabel(fName, lName);
 
