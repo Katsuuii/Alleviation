@@ -66,37 +66,37 @@
                 prefColumns="3"
                 styleClass="games-grid">
 
-         <!-- Honkai -->
+         <!-- Escape From Tarkov -->
          <VBox styleClass="game-card">
             <children>
                <ImageView fitHeight="120" fitWidth="136" preserveRatio="true" smooth="true" styleClass="game-image">
-                  <image><Image url="@/Pictures/Honkai.jpg"/></image>
+                  <image><Image url="@/Pictures/Tarkov.jpg"/></image>
                </ImageView>
 
-               <Label text="Honkai Star Rail" styleClass="game-name"/>
-               <Label text="\$5.00" styleClass="game-price"/>
+               <Label text="Escape From Tarkov" styleClass="game-name"/>
+               <Label text="\$50.00" styleClass="game-price"/>
 
                <Button text="View"
                        onAction="#openGame"
-                       userData="HONKAI"
+                       userData="TARKOV"
                        prefWidth="130" prefHeight="34"
                        styleClass="games-primary-btn"/>
             </children>
          </VBox>
 
-         <!-- ZZZ -->
+         <!-- Elden Ring -->
          <VBox styleClass="game-card">
             <children>
                <ImageView fitHeight="120" fitWidth="136" preserveRatio="true" smooth="true" styleClass="game-image">
-                  <image><Image url="@/Pictures/ZZZ.jpg"/></image>
+                  <image><Image url="@/Pictures/Elden_Ring.jpg"/></image>
                </ImageView>
 
-               <Label text="Zenless Zone Zero" styleClass="game-name"/>
-               <Label text="\$5.00" styleClass="game-price"/>
+               <Label text="Elden Ring" styleClass="game-name"/>
+               <Label text="\$59.99" styleClass="game-price"/>
 
                <Button text="View"
                        onAction="#openGame"
-                       userData="ZZZ"
+                       userData="ELDEN"
                        prefWidth="130" prefHeight="34"
                        styleClass="games-primary-btn"/>
             </children>

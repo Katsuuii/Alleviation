@@ -29,25 +29,25 @@ public class GamesController {
     private String loggedInUserEmail;
 
     // ✅ Official display names (used for Order prefill)
-    private static final String HONKAI_NAME = "Honkai: Star Rail";
-    private static final String ZZZ_NAME = "Zenless Zone Zero";
+    private static final String TARKOV_NAME = "Escape From Tarkov";
+    private static final String ELDEN_NAME  = "Elden Ring";
     private static final String OVERCOOKED_NAME = "Overcooked";
 
     // --- Popup game data ---
     private record GameInfo(String title, String priceText, String imagePath, String description) {}
 
     private final Map<String, GameInfo> games = Map.of(
-            "HONKAI", new GameInfo(
-                    HONKAI_NAME,
-                    "$5.00",
-                    "/Pictures/Honkai.jpg",
-                    "Turn-based RPG with story missions and character collection."
+            "TARKOV", new GameInfo(
+                    TARKOV_NAME,
+                    "$50.00",
+                    "/Pictures/Tarkov.jpg",
+                    "Hardcore FPS extraction shooter. Plan raids, loot, and escape."
             ),
-            "ZZZ", new GameInfo(
-                    ZZZ_NAME,
-                    "$5.00",
-                    "/Pictures/ZZZ.jpg",
-                    "Fast-paced action combat in a stylish urban-fantasy world."
+            "ELDEN", new GameInfo(
+                    ELDEN_NAME,
+                    "$59.99",
+                    "/Pictures/Elden_Ring.jpg",
+                    "Open-world action RPG. Explore, fight bosses, and build your character."
             ),
             "OVERCOOKED", new GameInfo(
                     OVERCOOKED_NAME,
@@ -135,8 +135,8 @@ public class GamesController {
 
     private void purchaseById(String id) {
         switch (id) {
-            case "HONKAI" -> handlePurchaseHonkai();
-            case "ZZZ" -> handlePurchaseZZZ();
+            case "TARKOV" -> handlePurchaseHonkai();
+            case "ELDEN" -> handlePurchaseZZZ();
             case "OVERCOOKED" -> handlePurchaseOvercooked();
         }
     }
@@ -144,12 +144,12 @@ public class GamesController {
     // -------------------- Purchase Button Handlers --------------------
     @FXML
     private void handlePurchaseHonkai() {
-        openOrderForm(HONKAI_NAME);
+        openOrderForm(TARKOV_NAME);
     }
 
     @FXML
     private void handlePurchaseZZZ() {
-        openOrderForm(ZZZ_NAME);
+        openOrderForm(ELDEN_NAME);
     }
 
     @FXML
