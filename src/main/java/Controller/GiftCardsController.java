@@ -18,7 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
+import Database.CartDatabase;
 import java.util.Map;
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class GiftCardsController {
 
     private final UserDatabase userDb = new UserDatabase();
     private final ProductDatabase productDb = new ProductDatabase();
-
+    private final CartDatabase cartDb = new CartDatabase();
     private int loggedInUserId;
     private String loggedInFirstName;
     private String loggedInLastName;
@@ -147,12 +147,19 @@ public class GiftCardsController {
         }
         // -------------------------------------------------------
 
-        Button buy = new Button("Purchase");
-        buy.getStyleClass().add("gc-primary-btn");
+        Button buy = new Button("Add to Cart");
+        buy.getStyleClass().add("giftcards-primary-btn");
         buy.setOnAction(ev -> {
-            openOrderForm(info.title());
+            if (loggedInUsername == null || loggedInUsername.isBlank()) return;
+            if (productId == null || productId.isBlank()) return;
+
+            String displayRange = info.range();
+            cartDb.addToCart(loggedInUsername, productId, info.title(), displayRange, "GIFT_CARD");
+
             dialog.close();
         });
+
+
 
         Button cancel = new Button("Cancel");
         cancel.getStyleClass().add("mini-btn");

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.CartController"
+            prefWidth="900"
+            prefHeight="600">
+
+    <VBox spacing="14"
+          AnchorPane.topAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          styleClass="root">
+
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="Cart" styleClass="title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Back"
+                    onAction="#GoBack"
+                    styleClass="secondary-btn"/>
+        </HBox>
+
+        <!-- Cart Items -->
+        <ScrollPane fitToWidth="true" styleClass="scroll">
+            <content>
+                <VBox fx:id="cartList" spacing="12">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
+
+        <!-- Footer -->
+        <HBox alignment="CENTER_RIGHT" spacing="12">
+            <Label fx:id="totalLabel"
+                   text="Total: $0.00"
+                   styleClass="total"/>
+            <Button text="Checkout"
+                    onAction="#Checkout"
+                    styleClass="primary-btn"/>
+            <Button text="Clear Cart"
+                    onAction="#ClearCart"
+                    styleClass="secondary-btn"/>
+        </HBox>
+
+    </VBox>
+</AnchorPane>

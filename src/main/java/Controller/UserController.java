@@ -59,7 +59,6 @@ public class UserController {
 
             Scene scene = new Scene(root);
 
-            // Optional: load global css if you want games theme consistent
             addStylesheetIfExists(scene, "/CSS/alleviation.css");
             addStylesheetIfExists(scene, "/CSS/games.css");
 
@@ -118,11 +117,36 @@ public class UserController {
 
             Scene scene = new Scene(root);
 
-            // ✅ Load your global theme if you want
             addStylesheetIfExists(scene, "/CSS/alleviation.css");
-
-            // ✅ Load wishlist.css and PRINT if missing
             addStylesheetIfExists(scene, "/CSS/wishlist.css");
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    public void GotoCart(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Cart.fxml"));
+            Parent root = loader.load();
+
+            CartController controller = loader.getController();
+            controller.setLoggedInUser(
+                    loggedInUserId,
+                    loggedInUsername,
+                    loggedInFirstName,
+                    loggedInLastName,
+                    loggedInUserEmail
+            );
+
+            Scene scene = new Scene(root);
+
+            addStylesheetIfExists(scene, "/CSS/alleviation.css");
+            addStylesheetIfExists(scene, "/CSS/cart.css");
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
@@ -168,8 +192,7 @@ public class UserController {
             Scene scene = new Scene(root);
 
             addStylesheetIfExists(scene, "/CSS/alleviation.css");
-            // If you have a dashboard css file, you can load it too:
-            // addStylesheetIfExists(scene, "/CSS/User-Dashboard.css");
+            // addStylesheetIfExists(scene, "/CSS/User-Dashboard.css"); // optional
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);

@@ -125,6 +125,8 @@
                      onAction="#GotoWishlist"
                      prefHeight="30" prefWidth="90"
                      styleClass="mini-btn"/>
+             <Button text="Cart" onAction="#GotoCart" />
+
 
          </HBox>
 

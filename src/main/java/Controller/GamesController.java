@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Map;
 import Database.ProductDatabase;
 import Database.UserDatabase;
+import Database.CartDatabase;
 
 public class GamesController {
 
@@ -33,6 +34,8 @@ public class GamesController {
 
     private final UserDatabase userDb = new UserDatabase();
     private final ProductDatabase productDb = new ProductDatabase();
+    private final CartDatabase cartDb = new CartDatabase();
+
 
     // ✅ Official display names (used for Order prefill)
     private static final String TARKOV_NAME = "Escape From Tarkov";
@@ -133,10 +136,13 @@ public class GamesController {
         }
 
 
-        Button buy = new Button("Purchase");
+        Button buy = new Button("Add to Cart");
         buy.getStyleClass().add("games-primary-btn");
         buy.setOnAction(ev -> {
-            purchaseById(id);
+            if (loggedInUsername == null || loggedInUsername.isBlank()) return;
+            if (productId == null || productId.isBlank()) return;
+
+            cartDb.addToCart(loggedInUsername, productId, info.title(), info.priceText(), "GAME");
             dialog.close();
         });
 
