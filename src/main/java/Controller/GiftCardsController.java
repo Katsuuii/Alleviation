@@ -22,6 +22,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 public class GiftCardsController {
 
@@ -36,11 +37,7 @@ public class GiftCardsController {
     private String loggedInLastName;
     private String loggedInUserEmail;
     private String loggedInUsername;
-    private String username;
-    // -------------------- Set logged-in user --------------------
-    public void setLoggedInUser(int userId, String firstName, String lastName, String email) {
-        setLoggedInUser(userId, null, firstName, lastName, email);
-    }
+
 
     public void setLoggedInUser(int userId, String username, String firstName, String lastName, String email) {
         this.loggedInUserId = userId;
@@ -76,7 +73,6 @@ public class GiftCardsController {
             )
     );
 
-    // ✅ This now matches your reverted OrderController exactly
     private void openOrderForm(String productName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Order.fxml"));
@@ -84,14 +80,18 @@ public class GiftCardsController {
 
             OrderController orderController = loader.getController();
 
-            // ✅ matches your reverted OrderController: (int, firstName, lastName, email)
+            // ✅ pass username too
             orderController.setUserData(
                     loggedInUserId,
+                    loggedInUsername,
                     loggedInFirstName,
                     loggedInLastName,
                     loggedInUserEmail
             );
 
+            // ✅ since this is a gift card
+            orderController.prefillProduct(productName);
+            orderController.enableGiftCardMode(productName);
 
             Stage stage = new Stage();
             stage.setTitle("Order: " + productName);
@@ -102,6 +102,7 @@ public class GiftCardsController {
             e.printStackTrace();
         }
     }
+
 
 
     // -------------------- Popup open --------------------
@@ -125,7 +126,7 @@ public class GiftCardsController {
         dialog.setResizable(false);
         dialog.setTitle("Buy: " + info.title());
 
-        ImageView cover = new ImageView(new Image(getClass().getResource(info.imagePath()).toExternalForm()));
+        ImageView cover = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(info.imagePath())).toExternalForm()));
         cover.setFitWidth(220);
         cover.setFitHeight(220);
         cover.setPreserveRatio(true);

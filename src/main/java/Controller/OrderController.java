@@ -232,44 +232,36 @@ public class OrderController implements Initializable {
             return;
         }
 
-
-
+        // 1) Validate BEFORE touching DB inventory/sales
         for (CheckoutRow r : rows) {
             if ("GIFT_CARD".equalsIgnoreCase(r.getType())) {
-                // Gift cards: sales only
-                productDb.recordGiftCardSale(r.getProductId(), r.getQty());
+                if (r.getGiftAmount() == null || r.getGiftAmount() <= 0) {
+                    showAlert(Alert.AlertType.ERROR, "Gift Card Amount Required",
+                            "Please choose an amount for: " + r.getProduct());
+                    return;
+                }
             } else {
-                // Games: stock down + sales up
-                productDb.recordSale(r.getProductId(), r.getQty());
+                int stock = productDb.getStock(r.getProductId());
+                if (r.getQty() > stock) {
+                    showAlert(Alert.AlertType.ERROR, "Out of Stock",
+                            r.getProduct() + ": only " + stock + " left.");
+                    return;
+                }
             }
         }
-
-
-
 
         String notes = (notesArea.getText() == null) ? "" : notesArea.getText().trim();
 
         try {
-            // Build order lines from cart rows
+            // 2) Build order lines
             List<OrderLine> lines = new ArrayList<>();
-
             for (CheckoutRow r : rows) {
-                String productId = r.getProductId();
-                int qty = r.getQty();
-                double priceAtOrder = r.getUnit();
-                Integer giftAmount = r.getGiftAmount();
-
-                // Stock check only for GAME
-                if (!"GIFT_CARD".equalsIgnoreCase(r.getType())) {
-                    int stock = productDb.getStock(productId);
-                    if (qty > stock) {
-                        showAlert(Alert.AlertType.ERROR, "Out of Stock",
-                                r.getProduct() + ": only " + stock + " left.");
-                        return;
-                    }
-                }
-
-                lines.add(new OrderLine(productId, qty, priceAtOrder, giftAmount));
+                lines.add(new OrderLine(
+                        r.getProductId(),
+                        r.getQty(),
+                        r.getUnit(),
+                        r.getGiftAmount()
+                ));
             }
 
             int id = generateOrderId();
@@ -277,28 +269,29 @@ public class OrderController implements Initializable {
 
             Order order = new Order(id, orderNumber, userId, lines, firstName, lastName, email);
 
-            // Save order
+            // 3) Save order + lines + receipt
             OrderDatabase orderDb = new OrderDatabase(getMongoCollection());
             orderDb.addOrder(order, notes);
 
             OrderLineDatabase orderLineDb = new OrderLineDatabase();
             orderLineDb.addOrderLinesForOrder(order);
 
-            // Reduce stock for non-giftcards
+            ReceiptDatabase receiptDb = new ReceiptDatabase();
+            receiptDb.addReceiptForOrder(order);
+
+            // 4) Update Product stats ONCE (after successful save)
             for (CheckoutRow r : rows) {
-                if (!"GIFT_CARD".equalsIgnoreCase(r.getType())) {
+                if ("GIFT_CARD".equalsIgnoreCase(r.getType())) {
+                    productDb.recordGiftCardSale(r.getProductId(), r.getQty());
+                } else {
                     productDb.recordSale(r.getProductId(), r.getQty());
                 }
             }
 
-            // Save receipt rows
-            ReceiptDatabase receiptDb = new ReceiptDatabase();
-            receiptDb.addReceiptForOrder(order);
-
-            // Clear cart after successful order
+            // 5) Clear cart
             cartDb.clearCart(username);
 
-            // Go to receipt screen
+            // 6) Go to receipt
             Receipt receipt = new Receipt(order, "Unknown");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Receipt.fxml"));
             Parent receiptRoot = loader.load();

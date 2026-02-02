@@ -24,12 +24,6 @@ public class UserController {
     private String loggedInUserEmail;
     private String loggedInUsername;
 
-    /**
-     * Called by LoginController or previous scene to pass logged-in user info
-     */
-    public void setLoggedInUser(int userId, String firstName, String lastName, String email) {
-        setLoggedInUser(userId, null, firstName, lastName, email);
-    }
 
     public void setLoggedInUser(int userId, String username, String firstName, String lastName, String email) {
         this.loggedInUserId = userId;
@@ -174,43 +168,12 @@ public class UserController {
         }
     }
 
-    @FXML
-    public void GotoMainMenu(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/FXML/UserInterface.fxml")));
-            Parent root = loader.load();
-
-            UserController userController = loader.getController();
-            userController.setLoggedInUser(
-                    loggedInUserId,
-                    loggedInUsername,
-                    loggedInFirstName,
-                    loggedInLastName,
-                    loggedInUserEmail
-            );
-
-            Scene scene = new Scene(root);
-
-            addStylesheetIfExists(scene, "/CSS/alleviation.css");
-            // addStylesheetIfExists(scene, "/CSS/User-Dashboard.css"); // optional
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     // -------------------- CSS Helper --------------------
     private void addStylesheetIfExists(Scene scene, String resourcePath) {
         URL url = getClass().getResource(resourcePath);
         if (url != null) {
             scene.getStylesheets().add(url.toExternalForm());
-            System.out.println("Loaded CSS: " + resourcePath);
-        } else {
-            System.out.println("CSS NOT FOUND: " + resourcePath + "  (Check src/main/Resources path + filename)");
         }
     }
 }

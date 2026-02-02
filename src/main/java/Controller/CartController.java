@@ -44,8 +44,11 @@ public class CartController {
 
     // -------------------- UI --------------------
     private void refreshCartUI() {
-        cartList.getChildren().clear();
-
+        if (loggedInUsername == null || loggedInUsername.isBlank()) {
+            cartList.getChildren().clear();
+            totalLabel.setText("Total: $0.00");
+            return;
+        }
         List<Document> items = cartDb.getCart(loggedInUsername);
         double total = 0.0;
 
@@ -81,6 +84,7 @@ public class CartController {
                 int step = (min == max) ? 1 : 5;
 
                 Spinner<Integer> amountSpinner = new Spinner<>();
+                amountSpinner.setEditable(false);
                 amountSpinner.setValueFactory(
                         new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max, current, step)
                 );

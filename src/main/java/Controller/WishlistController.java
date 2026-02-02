@@ -1,5 +1,6 @@
 package Controller;
 
+import Database.CartDatabase;
 import Database.ProductDatabase;
 import Database.UserDatabase;
 import javafx.event.ActionEvent;
@@ -10,15 +11,22 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class WishlistController {
+
+    private static final Map<String, String> GIFT_CARD_RANGES = Map.of(
+            "Roblox Gift Card", "$10–$50",
+            "Minecraft Gift Card", "$30",
+            "Steam Gift Card", "$5–$20",
+            "Visa Gift Card", "$5–$50"
+    );
 
     @FXML private VBox wishlistContainer;
     @FXML private Label emptyLabel;
@@ -31,26 +39,20 @@ public class WishlistController {
 
     private final UserDatabase userDb = new UserDatabase();
     private final ProductDatabase productDb = new ProductDatabase();
+    private final CartDatabase cartDb = new CartDatabase();
 
-    // Called by UserController to pass logged-in user info
-    public void setLoggedInUser(int loggedInUserId,
-                                String loggedInUsername,
-                                String loggedInFirstName,
-                                String loggedInLastName,
-                                String loggedInUserEmail) {
-
-        this.loggedInUserId = loggedInUserId;
-        this.loggedInUsername = loggedInUsername;
-        this.loggedInFirstName = loggedInFirstName;
-        this.loggedInLastName = loggedInLastName;
-        this.loggedInUserEmail = loggedInUserEmail;
+    public void setLoggedInUser(int userId, String username, String firstName, String lastName, String email) {
+        this.loggedInUserId = userId;
+        this.loggedInUsername = username;
+        this.loggedInFirstName = firstName;
+        this.loggedInLastName = lastName;
+        this.loggedInUserEmail = email;
 
         refreshWishlist();
     }
 
     @FXML
     private void initialize() {
-        // UI may load before user info is set
         if (emptyLabel != null) {
             emptyLabel.setText("Loading wishlist...");
             emptyLabel.setVisible(true);
@@ -82,77 +84,76 @@ public class WishlistController {
             String name = productDb.getProductNameById(productId);
             if (name == null) name = "(Unknown Product)";
 
-            final String finalName = name;
             final String finalProductId = productId;
+            final String finalName = name;
 
-            double price = 0.0;
-            try {
-                price = productDb.getPriceByProductId(finalProductId);
-            } catch (Exception ignored) {}
+// Compute texts first
+            String rangeText = GIFT_CARD_RANGES.get(finalName);
+            String priceText = "";
+
+            if (rangeText != null) {
+                priceText = rangeText;
+            } else {
+                try {
+                    double price = productDb.getPriceByProductId(finalProductId);
+                    priceText = String.format("$%.2f", price);
+                } catch (Exception ignored) {}
+            }
+
+// Now freeze them for lambdas
+            final String finalRangeText = rangeText;
+            final String finalPriceText = priceText;
+
 
             Label title = new Label(finalName);
             title.getStyleClass().add("wishlist-title");
 
-            String rangeText = GIFT_CARD_RANGES.get(finalName);
-
-            String priceText;
-            if (rangeText != null) {
-                // ✅ Gift card: show range
-                priceText = rangeText;
-            } else if (price > 0) {
-                // ✅ Normal product: show price
-                priceText = String.format("$%.2f", price);
-            } else {
-                priceText = "";
-            }
-
             Label priceLabel = new Label(priceText);
             priceLabel.getStyleClass().add("wishlist-price");
 
+            Button addToCart = new Button("Add to Cart");
+            addToCart.getStyleClass().add("primary-btn");
+            addToCart.setOnAction(e -> {
+                cartDb.addToCart(
+                        loggedInUsername,
+                        finalProductId,
+                        finalName,
+                        (finalRangeText != null ? finalRangeText : finalPriceText),
+                        (finalRangeText != null ? "GIFT_CARD" : "GAME")
+                );
 
-            Button buy = new Button("Buy");
-            buy.getStyleClass().add("primary-btn");
-            buy.setOnAction(e -> openOrderForm(finalName));
+                if (finalRangeText != null) {
+                    int min = parseMin(finalRangeText);
+                    cartDb.setGiftCardAmount(loggedInUsername, finalProductId, min);
+                }
+            });
 
             Button remove = new Button("Remove");
             remove.getStyleClass().add("mini-btn");
-            // remove.getStyleClass().add("danger-btn");
-
             remove.setOnAction(e -> {
                 userDb.removeFromWishlist(loggedInUsername, finalProductId);
                 refreshWishlist();
             });
 
-            HBox row = new HBox(12, title, priceLabel, buy, remove);
+            HBox row = new HBox(12, title, priceLabel, addToCart, remove);
             row.getStyleClass().add("wishlist-row");
 
             wishlistContainer.getChildren().add(row);
         }
     }
 
-    private void openOrderForm(String productName) {
+    private int parseMin(String range) {
+        // "$10–$50" or "$30"
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Order.fxml"));
-            Parent root = loader.load();
-
-            OrderController orderController = loader.getController();
-            orderController.setUserData(loggedInUserId, loggedInFirstName, loggedInLastName, loggedInUserEmail);
-
-            if (productName != null) {
-                orderController.prefillProduct(productName);
-            }
-
-            Stage stage = new Stage();
-            stage.setTitle("Order: " + productName);
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            String s = range.replace("$", "").trim();
+            if (s.contains("–")) return Integer.parseInt(s.split("–")[0].trim());
+            if (s.contains("-")) return Integer.parseInt(s.split("-")[0].trim());
+            return Integer.parseInt(s.trim());
+        } catch (Exception e) {
+            return 0;
         }
     }
 
-    // Back button in Wishlist.fxml calls this
     @FXML
     public void GobackUser(ActionEvent event) {
         try {
@@ -160,17 +161,9 @@ public class WishlistController {
             Parent root = loader.load();
 
             UserController uc = loader.getController();
-            uc.setLoggedInUser(
-                    loggedInUserId,
-                    loggedInUsername,
-                    loggedInFirstName,
-                    loggedInLastName,
-                    loggedInUserEmail
-            );
+            uc.setLoggedInUser(loggedInUserId, loggedInUsername, loggedInFirstName, loggedInLastName, loggedInUserEmail);
 
             Scene scene = new Scene(root);
-
-            // Optional: load your main css so it keeps theme
             var cssUrl = getClass().getResource("/CSS/alleviation.css");
             if (cssUrl != null) scene.getStylesheets().add(cssUrl.toExternalForm());
 
@@ -181,10 +174,5 @@ public class WishlistController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }private static final java.util.Map<String, String> GIFT_CARD_RANGES = java.util.Map.of(
-            "Roblox Gift Card", "$10–$50",
-            "Minecraft Gift Card", "$30",
-            "Steam Gift Card", "$5–$20",
-            "Visa Gift Card", "$5–$50"
-    );
+    }
 }
