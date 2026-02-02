@@ -14,16 +14,16 @@ public class CartDatabase {
 
     private final MongoCollection<Document> cartCol;
 
-    // ✅ Uses your DB provider
     public CartDatabase() {
-        // CHANGE THIS LINE IF YOUR DB GETTER IS DIFFERENT:
         MongoDatabase db = DatabaseAllev.getInstance().getDatabase();
-
         this.cartCol = db.getCollection("carts");
     }
 
     // Add item (if exists, qty++)
     public void addToCart(String username, String productId, String title, String displayPrice, String type) {
+        if (username == null || username.isBlank()) return;
+        if (productId == null || productId.isBlank()) return;
+
         Document existing = cartCol.find(Filters.and(
                 Filters.eq("username", username),
                 Filters.eq("productId", productId)
@@ -46,7 +46,6 @@ public class CartDatabase {
         }
     }
 
-    // Remove a line item completely
     public void removeItem(String username, String productId) {
         cartCol.deleteOne(Filters.and(
                 Filters.eq("username", username),
@@ -54,7 +53,6 @@ public class CartDatabase {
         ));
     }
 
-    // qty++
     public void incrementQty(String username, String productId) {
         Document existing = cartCol.find(Filters.and(
                 Filters.eq("username", username),
@@ -69,7 +67,6 @@ public class CartDatabase {
         );
     }
 
-    // qty-- (delete if reaches 0)
     public void decrementQty(String username, String productId) {
         Document existing = cartCol.find(Filters.and(
                 Filters.eq("username", username),
@@ -95,7 +92,7 @@ public class CartDatabase {
 
         // newest first
         items.sort(Comparator.comparingLong(d -> d.getLong("addedAt")));
-        // reverse manually
+
         List<Document> reversed = new ArrayList<>();
         for (int i = items.size() - 1; i >= 0; i--) reversed.add(items.get(i));
         return reversed;
@@ -103,5 +100,16 @@ public class CartDatabase {
 
     public void clearCart(String username) {
         cartCol.deleteMany(Filters.eq("username", username));
+    }
+
+    // ✅ NEW: store chosen denomination for gift cards
+    public void setGiftCardAmount(String username, String productId, int unitAmount) {
+        cartCol.updateOne(
+                Filters.and(
+                        Filters.eq("username", username),
+                        Filters.eq("productId", productId)
+                ),
+                Updates.set("unitAmount", unitAmount)
+        );
     }
 }

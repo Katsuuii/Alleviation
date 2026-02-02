@@ -1,5 +1,6 @@
 package Controller;
 
+import Database.CartDatabase;
 import Database.ProductDatabase;
 import Database.UserDatabase;
 import javafx.event.ActionEvent;
@@ -18,9 +19,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import Database.CartDatabase;
-import java.util.Map;
+
 import java.io.IOException;
+import java.util.Map;
 
 public class GiftCardsController {
 
@@ -29,12 +30,14 @@ public class GiftCardsController {
     private final UserDatabase userDb = new UserDatabase();
     private final ProductDatabase productDb = new ProductDatabase();
     private final CartDatabase cartDb = new CartDatabase();
+
     private int loggedInUserId;
     private String loggedInFirstName;
     private String loggedInLastName;
     private String loggedInUserEmail;
     private String loggedInUsername;
-
+    private String username;
+    // -------------------- Set logged-in user --------------------
     public void setLoggedInUser(int userId, String firstName, String lastName, String email) {
         setLoggedInUser(userId, null, firstName, lastName, email);
     }
@@ -73,15 +76,22 @@ public class GiftCardsController {
             )
     );
 
+    // ✅ This now matches your reverted OrderController exactly
     private void openOrderForm(String productName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Order.fxml"));
             Parent root = loader.load();
 
             OrderController orderController = loader.getController();
-            orderController.setUserData(loggedInUserId, loggedInFirstName, loggedInLastName, loggedInUserEmail);
-            orderController.prefillProduct(productName);
-            orderController.enableGiftCardMode(productName);
+
+            // ✅ matches your reverted OrderController: (int, firstName, lastName, email)
+            orderController.setUserData(
+                    loggedInUserId,
+                    loggedInFirstName,
+                    loggedInLastName,
+                    loggedInUserEmail
+            );
+
 
             Stage stage = new Stage();
             stage.setTitle("Order: " + productName);
@@ -93,6 +103,8 @@ public class GiftCardsController {
         }
     }
 
+
+    // -------------------- Popup open --------------------
     @FXML
     private void openGiftCard(ActionEvent event) {
         if (!(event.getSource() instanceof Button btn)) return;
@@ -139,34 +151,41 @@ public class GiftCardsController {
             heart.setDisable(true);
         } else {
             refreshHeart(heart, productId);
-
             heart.setOnAction(ev -> {
                 toggleWishlist(productId);
                 refreshHeart(heart, productId);
             });
         }
-        // -------------------------------------------------------
 
-        Button buy = new Button("Add to Cart");
-        buy.getStyleClass().add("giftcards-primary-btn");
-        buy.setOnAction(ev -> {
+        Button addToCart = new Button("Add to Cart");
+        addToCart.getStyleClass().add("giftcards-primary-btn");
+        addToCart.setOnAction(ev -> {
             if (loggedInUsername == null || loggedInUsername.isBlank()) return;
             if (productId == null || productId.isBlank()) return;
 
-            String displayRange = info.range();
-            cartDb.addToCart(loggedInUsername, productId, info.title(), displayRange, "GIFT_CARD");
+            cartDb.addToCart(
+                    loggedInUsername,
+                    productId,
+                    info.title(),
+                    info.range(),     // displayPrice stores "$10–$50" etc
+                    "GIFT_CARD"
+            );
 
             dialog.close();
         });
 
-
+        Button orderNow = new Button("Order Now");
+        orderNow.getStyleClass().add("mini-btn");
+        orderNow.setOnAction(ev -> {
+            dialog.close();
+            openOrderForm(info.title());
+        });
 
         Button cancel = new Button("Cancel");
         cancel.getStyleClass().add("mini-btn");
         cancel.setOnAction(ev -> dialog.close());
 
-        // ✅ heart added beside the buttons
-        HBox actions = new HBox(10, heart, buy, cancel);
+        HBox actions = new HBox(10, heart, addToCart, orderNow, cancel);
 
         VBox layout = new VBox(12, cover, title, desc, range, actions);
         layout.getStyleClass().add("gc-dialog");
@@ -184,11 +203,13 @@ public class GiftCardsController {
         dialog.showAndWait();
     }
 
+    // Optional direct purchase buttons (if you still use them in GiftCards.fxml)
     @FXML private void handlePurchaseRoblox() { openOrderForm(ROBLOX_GC); }
     @FXML private void handlePurchaseMinecraft() { openOrderForm(MINECRAFT_GC); }
     @FXML private void handlePurchaseSteam() { openOrderForm(STEAM_GC); }
     @FXML private void handlePurchaseVisa() { openOrderForm(VISA_GC); }
 
+    // -------------------- Navigation --------------------
     @FXML
     public void GobackUser(ActionEvent event) {
         switchSceneWithUser(event, "/FXML/UserInterface.fxml");

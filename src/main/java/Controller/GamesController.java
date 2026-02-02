@@ -1,5 +1,8 @@
 package Controller;
 
+import Database.CartDatabase;
+import Database.ProductDatabase;
+import Database.UserDatabase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,9 +21,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Map;
-import Database.ProductDatabase;
-import Database.UserDatabase;
-import Database.CartDatabase;
 
 public class GamesController {
 
@@ -36,13 +36,10 @@ public class GamesController {
     private final ProductDatabase productDb = new ProductDatabase();
     private final CartDatabase cartDb = new CartDatabase();
 
-
-    // ✅ Official display names (used for Order prefill)
     private static final String TARKOV_NAME = "Escape From Tarkov";
     private static final String ELDEN_NAME  = "Elden Ring";
     private static final String OVERCOOKED_NAME = "Overcooked";
 
-    // --- Popup game data ---
     private record GameInfo(String title, String priceText, String imagePath, String description) {}
 
     private final Map<String, GameInfo> games = Map.of(
@@ -66,7 +63,6 @@ public class GamesController {
             )
     );
 
-    // -------------------- Set logged-in user --------------------
     public void setLoggedInUser(int userId, String firstName, String lastName, String email) {
         setLoggedInUser(userId, null, firstName, lastName, email);
     }
@@ -79,20 +75,18 @@ public class GamesController {
         this.loggedInUserEmail = email;
     }
 
-    // -------------------- NEW: "View" button handler (popup) --------------------
     @FXML
     private void openGame(ActionEvent event) {
         if (!(event.getSource() instanceof Button btn)) return;
 
         String id = (String) btn.getUserData();
         GameInfo info = games.get(id);
-        if (info != null) showGamePopup(info, id);
+        if (info != null) showGamePopup(info);
     }
 
-    private void showGamePopup(GameInfo info, String id) {
+    private void showGamePopup(GameInfo info) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-
 
         if (Root != null && Root.getScene() != null) {
             dialog.initOwner(Root.getScene().getWindow());
@@ -123,18 +117,15 @@ public class GamesController {
         heart.getStyleClass().add("wishlist-btn");
 
         if (productId == null) {
-            // If product name doesn't exist in Product collection, don't crash
             heart.setText("♡");
             heart.setDisable(true);
         } else {
             refreshHeart(heart, productId);
-
             heart.setOnAction(ev -> {
                 toggleWishlist(productId);
                 refreshHeart(heart, productId);
             });
         }
-
 
         Button buy = new Button("Add to Cart");
         buy.getStyleClass().add("games-primary-btn");
@@ -150,14 +141,12 @@ public class GamesController {
         cancel.getStyleClass().add("mini-btn");
         cancel.setOnAction(ev -> dialog.close());
 
-        // put heart beside buttons
         HBox actions = new HBox(10, heart, buy, cancel);
 
         VBox layout = new VBox(12, cover, title, desc, price, actions);
         layout.getStyleClass().add("game-dialog");
 
         Scene scene = new Scene(layout);
-
 
         if (getClass().getResource("/CSS/alleviation.css") != null) {
             scene.getStylesheets().add(getClass().getResource("/CSS/alleviation.css").toExternalForm());
@@ -170,54 +159,6 @@ public class GamesController {
         dialog.showAndWait();
     }
 
-    private void purchaseById(String id) {
-        switch (id) {
-            case "TARKOV" -> handlePurchaseHonkai();
-            case "ELDEN" -> handlePurchaseZZZ();
-            case "OVERCOOKED" -> handlePurchaseOvercooked();
-        }
-    }
-
-
-    @FXML
-    private void handlePurchaseHonkai() {
-        openOrderForm(TARKOV_NAME);
-    }
-
-    @FXML
-    private void handlePurchaseZZZ() {
-        openOrderForm(ELDEN_NAME);
-    }
-
-    @FXML
-    private void handlePurchaseOvercooked() {
-        openOrderForm(OVERCOOKED_NAME);
-    }
-
-
-    private void openOrderForm(String productName) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Order.fxml"));
-            Parent root = loader.load();
-
-            OrderController orderController = loader.getController();
-            orderController.setUserData(loggedInUserId, loggedInFirstName, loggedInLastName, loggedInUserEmail);
-
-            if (productName != null) {
-                orderController.prefillProduct(productName);
-            }
-
-            Stage stage = new Stage();
-            stage.setTitle(productName != null ? "Order: " + productName : "Order Form");
-            stage.setScene(new Scene(root));
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     @FXML
     public void GobackUser(ActionEvent event) {
         switchSceneWithUser(event, "/FXML/UserInterface.fxml");
@@ -227,7 +168,6 @@ public class GamesController {
     public void Loggingout(ActionEvent event) {
         switchScene(event, "/FXML/Alleviation.fxml");
     }
-
 
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
@@ -258,19 +198,15 @@ public class GamesController {
             e.printStackTrace();
         }
     }
-    // -------------------- Wishlist helpers --------------------
+
     // -------------------- Wishlist helpers --------------------
     private void toggleWishlist(String productId) {
         if (loggedInUsername == null || loggedInUsername.isBlank()) return;
         if (productId == null || productId.isBlank()) return;
 
         boolean on = userDb.isWishlisted(loggedInUsername, productId);
-
-        if (on) {
-            userDb.removeFromWishlist(loggedInUsername, productId);
-        } else {
-            userDb.addToWishlist(loggedInUsername, productId);
-        }
+        if (on) userDb.removeFromWishlist(loggedInUsername, productId);
+        else userDb.addToWishlist(loggedInUsername, productId);
     }
 
     private void refreshHeart(Button heart, String productId) {
@@ -288,15 +224,11 @@ public class GamesController {
         heart.setText(on ? "♥" : "♡");
 
         if (on) {
-            if (!heart.getStyleClass().contains("wishlist-on")) {
-                heart.getStyleClass().add("wishlist-on");
-            }
+            if (!heart.getStyleClass().contains("wishlist-on")) heart.getStyleClass().add("wishlist-on");
         } else {
             heart.getStyleClass().remove("wishlist-on");
         }
 
         heart.setDisable(false);
     }
-
-
 }

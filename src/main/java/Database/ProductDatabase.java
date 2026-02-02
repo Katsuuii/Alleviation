@@ -1,5 +1,7 @@
 package Database;
+
 import static com.mongodb.client.model.Filters.eq;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
@@ -12,11 +14,13 @@ public class ProductDatabase {
     public ProductDatabase() {
         this.productCollection = DatabaseAllev.getInstance().getDatabase().getCollection("Product");
     }
+
     public String getProductIdByName(String productName) {
         Document doc = productCollection.find(eq("name", productName)).first();
         if (doc == null) return null;
         return doc.getString("_id");
     }
+
     public String getProductNameById(String productId) {
         Document doc = productCollection.find(eq("_id", productId)).first();
         if (doc == null) return null;
@@ -40,6 +44,7 @@ public class ProductDatabase {
         productCollection.insertOne(doc);
     }
 
+    // ✅ For normal products (games): decrease stock + increase sales
     public void recordSale(String productId, int amount) {
         Document query = new Document("_id", productId);
 
@@ -50,18 +55,29 @@ public class ProductDatabase {
 
         var result = productCollection.updateOne(query, updates);
 
-        // No println, but still catches "it didn't update"
         if (result.getMatchedCount() == 0) {
             throw new IllegalStateException("recordSale failed: product not found for _id=" + productId);
         }
         if (result.getModifiedCount() == 0) {
-            // Matched but didn't change (usually amount=0 or fields missing)
             throw new IllegalStateException("recordSale failed: matched but not modified for _id=" + productId);
         }
     }
 
+    // ✅ For gift cards: ONLY increase sales (do NOT change quantity)
+    public void recordGiftCardSale(String productId, int amount) {
+        Document query = new Document("_id", productId);
 
+        Bson updates = Updates.inc("sales", amount);
 
+        var result = productCollection.updateOne(query, updates);
+
+        if (result.getMatchedCount() == 0) {
+            throw new IllegalStateException("recordGiftCardSale failed: product not found for _id=" + productId);
+        }
+        if (result.getModifiedCount() == 0) {
+            throw new IllegalStateException("recordGiftCardSale failed: matched but not modified for _id=" + productId);
+        }
+    }
 
     public int getStock(String productId) {
         Document doc = productCollection.find(eq("_id", productId)).first();
