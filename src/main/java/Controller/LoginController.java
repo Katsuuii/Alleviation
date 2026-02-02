@@ -88,9 +88,8 @@ public class LoginController {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/UserInterface.fxml"));
                 Parent root = loader.load();
 
-
-                UserController userController = loader.getController();
-                userController.setLoggedInUser(userId, firstName, lastName, email);
+                UserController uc = loader.getController();
+                uc.setLoggedInUser(userId, username, firstName, lastName, email);
 
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root));

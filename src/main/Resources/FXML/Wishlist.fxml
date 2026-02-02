@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controller.WishlistController"
+            prefWidth="700.0" prefHeight="450.0">
+
+    <children>
+        <VBox spacing="14.0"
+              prefWidth="700.0" prefHeight="450.0"
+              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+              styleClass="page">
+
+            <!-- Header -->
+            <HBox spacing="12.0" alignment="CENTER_LEFT" styleClass="header">
+                <children>
+                    <Label text="Wishlist" styleClass="title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Back"
+                            mnemonicParsing="false"
+                            onAction="#GobackUser"
+                            styleClass="mini-btn"/>
+                </children>
+            </HBox>
+
+            <!-- Empty state label -->
+            <Label fx:id="emptyLabel"
+                   text="Your wishlist is empty."
+                   visible="true"/>
+
+            <!-- Wishlist items list -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="wishlistContainer" spacing="10.0" prefWidth="660.0"/>
+                </content>
+            </ScrollPane>
+
+        </VBox>
+    </children>
+</AnchorPane>

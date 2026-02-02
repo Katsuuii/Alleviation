@@ -19,7 +19,7 @@
             fx:controller="Controller.UserController">
 
    <stylesheets>
-      <URL value="@/CSS/user-dashboard.css"/>
+      <URL value="@/CSS/User-Dashboard.css"/>
    </stylesheets>
 
    <children>
@@ -120,6 +120,12 @@
                     onAction="#Loggingout"
                     prefHeight="30" prefWidth="90"
                     styleClass="mini-btn"/>
+             <Button text="Wishlist"
+                     mnemonicParsing="false"
+                     onAction="#GotoWishlist"
+                     prefHeight="30" prefWidth="90"
+                     styleClass="mini-btn"/>
+
          </HBox>
 
       </VBox>

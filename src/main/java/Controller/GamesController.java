@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Map;
+import Database.ProductDatabase;
+import Database.UserDatabase;
 
 public class GamesController {
 
@@ -27,6 +29,10 @@ public class GamesController {
     private String loggedInFirstName;
     private String loggedInLastName;
     private String loggedInUserEmail;
+    private String loggedInUsername;
+
+    private final UserDatabase userDb = new UserDatabase();
+    private final ProductDatabase productDb = new ProductDatabase();
 
     // ✅ Official display names (used for Order prefill)
     private static final String TARKOV_NAME = "Escape From Tarkov";
@@ -59,7 +65,12 @@ public class GamesController {
 
     // -------------------- Set logged-in user --------------------
     public void setLoggedInUser(int userId, String firstName, String lastName, String email) {
+        setLoggedInUser(userId, null, firstName, lastName, email);
+    }
+
+    public void setLoggedInUser(int userId, String username, String firstName, String lastName, String email) {
         this.loggedInUserId = userId;
+        this.loggedInUsername = username;
         this.loggedInFirstName = firstName;
         this.loggedInLastName = lastName;
         this.loggedInUserEmail = email;
@@ -103,6 +114,25 @@ public class GamesController {
         Label price = new Label("Price: " + info.priceText());
         price.getStyleClass().add("game-price");
 
+        // --- Wishlist heart ---
+        String productId = productDb.getProductIdByName(info.title());
+        Button heart = new Button();
+        heart.getStyleClass().add("wishlist-btn");
+
+        if (productId == null) {
+            // If product name doesn't exist in Product collection, don't crash
+            heart.setText("♡");
+            heart.setDisable(true);
+        } else {
+            refreshHeart(heart, productId);
+
+            heart.setOnAction(ev -> {
+                toggleWishlist(productId);
+                refreshHeart(heart, productId);
+            });
+        }
+
+
         Button buy = new Button("Purchase");
         buy.getStyleClass().add("games-primary-btn");
         buy.setOnAction(ev -> {
@@ -114,7 +144,8 @@ public class GamesController {
         cancel.getStyleClass().add("mini-btn");
         cancel.setOnAction(ev -> dialog.close());
 
-        HBox actions = new HBox(10, buy, cancel);
+        // put heart beside buttons
+        HBox actions = new HBox(10, heart, buy, cancel);
 
         VBox layout = new VBox(12, cover, title, desc, price, actions);
         layout.getStyleClass().add("game-dialog");
@@ -210,7 +241,7 @@ public class GamesController {
 
             Object controller = loader.getController();
             if (controller instanceof UserController uc) {
-                uc.setLoggedInUser(loggedInUserId, loggedInFirstName, loggedInLastName, loggedInUserEmail);
+                uc.setLoggedInUser(loggedInUserId, loggedInUsername, loggedInFirstName, loggedInLastName, loggedInUserEmail);
             }
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -221,4 +252,45 @@ public class GamesController {
             e.printStackTrace();
         }
     }
+    // -------------------- Wishlist helpers --------------------
+    // -------------------- Wishlist helpers --------------------
+    private void toggleWishlist(String productId) {
+        if (loggedInUsername == null || loggedInUsername.isBlank()) return;
+        if (productId == null || productId.isBlank()) return;
+
+        boolean on = userDb.isWishlisted(loggedInUsername, productId);
+
+        if (on) {
+            userDb.removeFromWishlist(loggedInUsername, productId);
+        } else {
+            userDb.addToWishlist(loggedInUsername, productId);
+        }
+    }
+
+    private void refreshHeart(Button heart, String productId) {
+        if (heart == null) return;
+
+        boolean hasUser = loggedInUsername != null && !loggedInUsername.isBlank();
+        if (!hasUser || productId == null || productId.isBlank()) {
+            heart.setText("♡");
+            heart.setDisable(true);
+            heart.getStyleClass().remove("wishlist-on");
+            return;
+        }
+
+        boolean on = userDb.isWishlisted(loggedInUsername, productId);
+        heart.setText(on ? "♥" : "♡");
+
+        if (on) {
+            if (!heart.getStyleClass().contains("wishlist-on")) {
+                heart.getStyleClass().add("wishlist-on");
+            }
+        } else {
+            heart.getStyleClass().remove("wishlist-on");
+        }
+
+        heart.setDisable(false);
+    }
+
+
 }

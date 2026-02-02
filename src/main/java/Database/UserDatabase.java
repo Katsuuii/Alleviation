@@ -4,6 +4,10 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.mindrot.jbcrypt.BCrypt; // Import BCrypt
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDatabase {
 
@@ -87,5 +91,69 @@ public class UserDatabase {
     public boolean usernameExists(String username) {
         Document found = userCollection.find(new Document("username", username)).first();
         return found != null;
+    }
+
+
+    // Wishlist (embedded in User)
+    // ----------------------------
+
+    /** Adds productId to the user's wishlist (no duplicates). */
+    public boolean addToWishlist(String username, String productId) {
+        try {
+            return userCollection.updateOne(
+                    Filters.eq("username", username),
+                    Updates.addToSet("wishlist", productId)
+            ).getModifiedCount() > 0;
+        } catch (MongoException e) {
+            System.err.println("DATABASE ERROR adding to wishlist for user: " + username);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /** Removes productId from the user's wishlist. */
+    public boolean removeFromWishlist(String username, String productId) {
+        try {
+            return userCollection.updateOne(
+                    Filters.eq("username", username),
+                    Updates.pull("wishlist", productId)
+            ).getModifiedCount() > 0;
+        } catch (MongoException e) {
+            System.err.println("DATABASE ERROR removing from wishlist for user: " + username);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /** Returns true if productId exists in the user's wishlist. */
+    public boolean isWishlisted(String username, String productId) {
+        try {
+            Document user = userCollection.find(
+                    Filters.and(
+                            Filters.eq("username", username),
+                            Filters.in("wishlist", productId)
+                    )
+            ).first();
+            return user != null;
+        } catch (MongoException e) {
+            System.err.println("DATABASE ERROR checking wishlist for user: " + username);
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /** Gets the user's wishlist product IDs. Always returns a list (never null). */
+    public List<String> getWishlist(String username) {
+        try {
+            Document user = userCollection.find(Filters.eq("username", username)).first();
+            if (user == null) return new ArrayList<>();
+
+            List<String> wishlist = user.getList("wishlist", String.class);
+            return wishlist != null ? wishlist : new ArrayList<>();
+        } catch (MongoException e) {
+            System.err.println("DATABASE ERROR reading wishlist for user: " + username);
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }
